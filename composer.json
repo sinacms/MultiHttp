@@ -2,7 +2,6 @@
   "name": "sinacms/MultiHttp",
   "description": "a tool for  multi-curl written in php",
   "keywords": ["php","multi", "curl", "parallel", "requests", "asynchronous", "http"],
-  "minimum-stability": "beta",
   "repositories": [
     {
       "type": "vcs",
@@ -25,7 +24,7 @@
     "php": ">=5.3.0",
     "ext-curl": "*",
     "lib-curl": "*",
-    "nategood/httpful": "v0.2.*"
+    "nategood/httpful": ">=v0.2.20"
   },
   "autoload": {
     "psr-4": {"sinacms\\MultiHttp": "src"}
