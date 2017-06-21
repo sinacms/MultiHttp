@@ -9,9 +9,9 @@
  * @since 1.0
  * @copyright Sina Corp.
  */
-namespace sinacms\MultiHttp;
+namespace MultiHttp\Exception;
 
 
-class CurlInvalidArgumentException extends \LogicException{
-    protected $code = 1;
+class UnexpectedResponseException extends \UnexpectedValueException {
+    protected $code = 3;
 }

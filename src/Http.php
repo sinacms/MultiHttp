@@ -9,36 +9,49 @@
  * @copyright Sina Corp.
  */
 
-namespace sinacms\MultiHttp;
-
+namespace MultiHttp;
 
 
 abstract class Http
 {
-    const HEAD      = 'HEAD';
-    const GET       = 'GET';
-    const POST      = 'POST';
-    const PUT       = 'PUT';
-    const DELETE    = 'DELETE';
-    const PATCH     = 'PATCH';
-    const OPTIONS   = 'OPTIONS';
-    const TRACE     = 'TRACE';
+    const HEAD = 'HEAD';
+    const GET = 'GET';
+    const POST = 'POST';
+    const PUT = 'PUT';
+    const DELETE = 'DELETE';
+    const PATCH = 'PATCH';
+    const OPTIONS = 'OPTIONS';
+    const TRACE = 'TRACE';
+    public static $methods = array(
+        'HEAD' => self::HEAD,
+        'GET' => self::GET,
+        'POST' => self::POST,
+        'PUT' => self::PUT,
+        'DELETE' => self::DELETE,
+        'PATCH' => self::PATCH,
+        'OPTIONS' => self::OPTIONS,
+        'TRACE' => self::TRACE,
+    );
 
-    abstract function head($uri, array $payload = array(), array $options = array());
-    abstract function get($uri, array $payload = array(), array $options = array());
     abstract function post($uri, array $payload = array(), array $options = array());
-    abstract function put($uri, array $payload = array(), array $options = array());
-    abstract function DELETE($uri, array $payload = array(), array $options = array());
+
     abstract function PATCH($uri, array $payload = array(), array $options = array());
-    abstract function OPTIONS($uri, array $payload = array(), array $options = array());
-    abstract function TRACE($uri, array $payload = array(), array $options = array());
+
+    abstract function put($uri, array $payload = array(), array $options = array());
+
+    abstract function get($uri,  array $options = array());
+
+    abstract function head($uri, array $options = array());
+
+    abstract function delete($uri, array $options = array());
+
+    abstract function options($uri, array $options = array());
+
+    abstract function trace($uri, array $options = array());
 
     public static function isHaveBody()
     {
-        return array(self::POST, self::PUT, self::PATCH, self::OPTIONS);
+        return array(self::POST, self::PUT, self::PATCH);
     }
-    public static function safeMethods()
-    {
-        return array(self::HEAD, self::GET, self::OPTIONS, self::TRACE);
-    }
+
 }
