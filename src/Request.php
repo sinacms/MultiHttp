@@ -89,20 +89,6 @@ class Request extends Http
         return $this->curlHandle ? true : false;
     }
 
-    /**
-     * @param $key
-     * @return mixed
-     */
-    protected static function optionAlias($key)
-    {
-        $alias = false;
-        if (isset(self::$curlAlias[$key])) {
-            $alias = self::$curlAlias[$key];
-        } elseif ((substr($key, 0, strlen('CURLOPT_')) == 'CURLOPT_') && defined($key)) {
-            $alias = $key;
-        }
-        return $alias;
-    }
 
     public function addQuery($data)
     {
@@ -142,7 +128,6 @@ class Request extends Http
             $this->options['url'] .= strpos($this->options['url'], '?') === FALSE ? '?' : '&';
             $this->options['url'] .= $this->withURIQuery;
         }
-
         if (isset($this->options['callback'])) {
             $this->onEnd($this->options['callback']);
             unset($this->options['callback']);
@@ -248,13 +233,29 @@ class Request extends Http
 
     protected static function filterAndRaw(array &$options)
     {
+        $opts= array();
         foreach ($options as $key => $val) {
             $alias = self::optionAlias($key);
-            if ($alias) $options[constant($alias)] = $val;
             unset($options[$key]);
+            if ($alias) $opts[constant($alias)] = $val;
         }
+        $options = $opts;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     */
+    protected static function optionAlias($key)
+    {
+        $alias = false;
+        if (isset(self::$curlAlias[$key])) {
+            $alias = self::$curlAlias[$key];
+        } elseif ((substr($key, 0, strlen('CURLOPT_')) == 'CURLOPT_') && defined($key)) {
+            $alias = $key;
+        }
+        return $alias;
+    }
     protected function doCurl()
     {
         $rtn = $this->makeResponse();
