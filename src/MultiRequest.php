@@ -90,7 +90,8 @@ class MultiRequest
         do {
             curl_multi_exec(self::$multiHandler, $running);
             if (!$concurrency && $this->beginningCallback) {
-                ($this->beginningCallback)();
+                $func = $this->beginningCallback;
+                $func();
             }
             $concurrency = true;
             // Wait for activity on any curl-connection
@@ -102,7 +103,8 @@ class MultiRequest
                     foreach (self::$requestPool as $request) {
                         if ($request->hasEndCallback() && $info['handle'] == $request->curlHandle) {
                             $response = $request->makeResponse(true);
-                            ($request->endCallback())($response);
+                            $func = $request->endCallback();
+                            $func($response);
                             break;
                         }
                     }

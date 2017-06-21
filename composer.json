@@ -8,10 +8,6 @@
     {
       "type": "vcs",
       "url": "https://github.com/sinacms/MultiHttp"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/nategood/httpful"
     }
   ],
   "authors": [

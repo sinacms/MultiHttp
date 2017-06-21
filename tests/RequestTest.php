@@ -25,7 +25,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->inst = Request::create();
-        $this->assertTrue(get_class($this->inst) == Request::class);
+        #$this->assertTrue(get_class($this->inst) == Request::class);
     }
     function test()
     {

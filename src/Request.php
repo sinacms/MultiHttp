@@ -259,7 +259,8 @@ class Request extends Http
     {
         $rtn = $this->makeResponse();
         if ($this->endCallback) {
-            ($this->endCallback)($rtn);
+            $func = $this->endCallback;
+            $func($rtn);
         }
         curl_close($this->curlHandle);
         return $rtn;
