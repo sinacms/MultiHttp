@@ -37,7 +37,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 						$this->assertTrue(is_array($response->header) && $response->header);
 //						$this->assertLessThan(1.5, $response->duration);
 						$this->assertFalse($response->hasErrors(), $response->request->getURI().$response->error);
-						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?&1', $response->request->getURI());
+						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?&1', $response->request->getURI());
 						$this->assertEquals(Request::HEAD, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
 						$this->assertTrue($response->request->hasInitialized());
@@ -45,7 +45,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 				],
 
 				[
-					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=1&a',
+					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=&a',
 					'timeout' => 2,
 					'data'    => [
 						'data'   => 'this_is_post_data'
@@ -54,7 +54,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 //						$this->assertLessThan(5, $response->duration);
 //						$this->assertGreaterThan(1, $response->duration);
 						$this->assertFalse($response->hasErrors(), $response->request->getURI().$response->error);
-						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=1&a', $response->request->getURI());
+						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=&a', $response->request->getURI());
 						$this->assertEquals(Request::GET, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
 						$this->assertTrue($response->request->hasInitialized());
@@ -70,7 +70,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 					],
 					'callback' => function (Response $response) {
 						$this->assertFalse($response->hasErrors(), $response->request->getURI().$response->error);
-						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0&b', $response->request->getURI());
+						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=0&b', $response->request->getURI());
 						$this->assertEquals(Request::POST, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
 						$this->assertTrue($response->request->hasInitialized());

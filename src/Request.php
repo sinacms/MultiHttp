@@ -250,7 +250,6 @@ class Request extends Http {
 		$errno    = curl_errno($this->curlHandle);
 		$error    = curl_error($this->curlHandle);
 		$response = Response::create($this, $body, $info, $errno, $error);
-		curl_close($this->curlHandle);
 		return $response;
 	}
 }
