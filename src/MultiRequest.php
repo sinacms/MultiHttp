@@ -71,7 +71,7 @@ class MultiRequest {
 	 */
 	public function execute() {
 		$sleepTime = 1000;//microsecond, prevent  CPU 100%
-
+/*
 		while (($multiFlg = curl_multi_exec(self::$multiHandler, $active)) == CURLM_CALL_MULTI_PERFORM);
 
 		while ($active && $multiFlg == CURLM_OK) {
@@ -82,22 +82,17 @@ class MultiRequest {
 			if (($f = curl_multi_select(self::$multiHandler)) === -1) {
 				usleep($sleepTime);
 			}
-			/*
-			if (false !== ($info = curl_multi_info_read(self::$multiHandler))) {
-			if (isset($info['handle']) && is_resource($info['handle'])) {
-			foreach (self::$requestPool as $request) {
-			if ($request->hasEndCallback() && $info['handle'] == $request->curlHandle) {
-			$response = $request->makeResponse(true);
-			$func     = $request->endCallback();
-			$func($response);
-			break;
-			}
-			}
-			}
-			}
-			 */
+
 			usleep($sleepTime);
 		}
+*/
+        do{
+            curl_multi_exec(self::$multiHandler, $active);
+            if (curl_multi_select(self::$multiHandler) === -1) {
+                usleep($sleepTime);
+            }
+            usleep($sleepTime);
+        }while($active);
 		$return = array();
 		foreach (self::$requestPool as $request) {
 			$response = $request->makeResponse(true);
