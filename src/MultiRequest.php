@@ -71,6 +71,7 @@ class MultiRequest {
 	 */
 	public function execute() {
 		$sleepTime = 1000;//microsecond, prevent  CPU 100%
+
 		while (($multiFlg = curl_multi_exec(self::$multiHandler, $active)) == CURLM_CALL_MULTI_PERFORM);
 
 		while ($active && $multiFlg == CURLM_OK) {

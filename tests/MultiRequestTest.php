@@ -45,7 +45,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 				],
 
 				[
-					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=&a',
+					'url'     => TEST_SERVER.'/dynamic/blocking2.php?&a',
 					'timeout' => 2,
 					'data'    => [
 						'data'   => 'this_is_post_data'
@@ -54,7 +54,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 //						$this->assertLessThan(5, $response->duration);
 //						$this->assertGreaterThan(1, $response->duration);
 						$this->assertFalse($response->hasErrors(), $response->request->getURI().$response->error);
-						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=&a', $response->request->getURI());
+						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?&a', $response->request->getURI());
 						$this->assertEquals(Request::GET, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
 						$this->assertTrue($response->request->hasInitialized());
