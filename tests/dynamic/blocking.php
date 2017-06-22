@@ -12,12 +12,12 @@ header('Content-type:application/json; charset=utf8');
 header('X-CMS-INFO: test');
 header('X-CMS-invalid');
 
-$secs = isset($_GET['sleepSecs']) ? $_GET['sleepSecs'] : 0;
+$secs = isset($_GET['sleepSecs'])?$_GET['sleepSecs']:0;
 sleep($secs);
 echo json_encode([
-    'method' => $_SERVER['REQUEST_METHOD'],
-    'sleepSecs' => $secs,
-    'uri' => $_SERVER['REQUEST_URI'],
-    'post'=> $_POST,
-    'get'=> $_GET,
-]);
+		'method'    => $_SERVER['REQUEST_METHOD'],
+		'sleepSecs' => $secs,
+		'uri'       => $_SERVER['REQUEST_URI'],
+		'post'      => $_POST,
+		'get'       => $_GET,
+	]);

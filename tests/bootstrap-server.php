@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Shanghai');
 $php_version = phpversion();
 $php_major = floatval(substr($php_version, 0, 3));
 
