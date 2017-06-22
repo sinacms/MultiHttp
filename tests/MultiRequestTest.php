@@ -62,7 +62,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 					}
 				],
 				[
-					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=0&b',
+					'url'     => TEST_SERVER.'/dynamic/blocking2.php?&b',
 					'method'  => 'POST',
 					'timeout' => 2,
 					'data'    => [
@@ -70,7 +70,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 					],
 					'callback' => function (Response $response) {
 						$this->assertFalse($response->hasErrors(), $response->request->getURI().$response->error);
-						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=0&b', $response->request->getURI());
+						$this->assertEquals(TEST_SERVER.'/dynamic/blocking2.php?&b', $response->request->getURI());
 						$this->assertEquals(Request::POST, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
 						$this->assertTrue($response->request->hasInitialized());
@@ -107,9 +107,9 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 				[
 					'url'      => 'http://www.proxy.com',
 					'ip'       => '127.0.0.1',
-					'timeout'  => 3,
+					'timeout'  => 1,
 					'callback' => function (Response $response) {
-						//                        $this->assertTrue($response->info['']);
+						//$this->assertTrue($response->info['']);
 						$this->assertTrue($response->hasErrors());
 						$this->assertFalse(strlen($response->body) > 0);
 					}

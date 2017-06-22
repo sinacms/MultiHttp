@@ -61,14 +61,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->assertJsonStringEqualsJsonFile(WEB_SERVER_DOCROOT.'/static/test.json', $response->body);
         })->execute();
 
-        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=', [
+        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
             'callback' => function (Response $response) {
                 $this->assertTrue ($response->request->hasEndCallback());
                 $this->assertTrue ($response->request->hasInitialized());
-                sleep(2);
             }])->execute();
 
-        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=', [
+        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::PATCH,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
