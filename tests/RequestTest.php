@@ -35,7 +35,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'timeout' => 3,
             'timeout_ms' => 2000,
             'callback' => function (Response $response) {
-                var_dump($response);
                 #$this->assertLessThan(3,$response->duration);
                 #$this->assertGreaterThan(2,$response->duration);
                 $this->assertTrue($response->hasErrors(), $response->error);
@@ -50,7 +49,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertLessThan(3,$response->duration);
                 $this->assertGreaterThan(2,$response->duration);
                 $this->assertTrue (strlen($response->body)>0);
-//                var_dump($response->code,$response->header, substr($response->body,0, 50),  $response->info);
 
                 $this->assertFalse($response->hasErrors());
                 $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=2', $response->request->getURI());

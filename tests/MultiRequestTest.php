@@ -28,7 +28,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 		$rtn = $mc->addOptions(
 			[
 				[
-					'url'    => TEST_SERVER.'/dynamic/blocking.php?&1',
+					'url'    => TEST_SERVER.'/dynamic/blocking2.php?&1',
 					'method' => 'HEAD',
 					'data'   => [
 					],
@@ -45,7 +45,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 				],
 
 				[
-					'url'     => TEST_SERVER.'/dynamic/blocking.php?sleepSecs=1&a',
+					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=1&a',
 					'timeout' => 2,
 					'data'    => [
 						'data'   => 'this_is_post_data'
@@ -62,7 +62,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 					}
 				],
 				[
-					'url'     => TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0&b',
+					'url'     => TEST_SERVER.'/dynamic/blocking2.php?sleepSecs=0&b',
 					'method'  => 'POST',
 					'timeout' => 2,
 					'data'    => [
