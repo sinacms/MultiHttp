@@ -17,6 +17,8 @@ var_dump($r);
 
 $r = \MultiHttp\Request::create()->get('http://www.google.com', ['timeout'=>2])->execute();
 var_dump($r);
+$r = \MultiHttp\MultiRequest::create()->add('GET','http://www.facebook.com', [], ['timeout'=>2])->execute();
+var_dump($r);
 
 
 
