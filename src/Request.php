@@ -37,7 +37,7 @@ class Request extends Http {
 	public $curlHandle;
     protected $options = array(
         'CURLOPT_MAXREDIRS' => 10,
-        'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//IPv4
+//        'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//IPv4
         'header' => true,
         'method' => self::GET,
         'transfer' => true,
