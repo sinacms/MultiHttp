@@ -14,7 +14,6 @@ use MultiHttp\Response;
  * @copyright Sina Corp.
  */
 
-
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     public static function setupBeforeClass()

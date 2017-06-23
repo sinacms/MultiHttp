@@ -23,6 +23,9 @@
     "ext-curl": "*",
     "lib-curl": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "4.0.*"
+  },
   "autoload": {
     "psr-4": {"MultiHttp\\": "src"}
   }
