@@ -1,9 +1,8 @@
 # MultiHttp
     
-![icon](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)
+
     This is high performance PHP curl wrapper written in php.
-    
-    
+
     
 ## Installation
    
