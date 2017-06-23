@@ -89,9 +89,9 @@ $t1=microtime(1);
             // bug in PHP 5.3.18+ where curl_multi_select can return -1
 			// https://bugs.php.net/bug.php?id=63411
             if (curl_multi_select(self::$multiHandler) == -1) {
-//                usleep($sleepTime);
+                usleep($sleepTime);
             }
-//            usleep($sleepTime);
+            usleep($sleepTime);
         }while($active);
         $t2=microtime(1);
 var_dump('diff', $t2-$t1);
