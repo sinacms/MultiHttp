@@ -8,6 +8,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/sinacms/MultiHttp"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/sebastianbergmann/phpunit"
     }
   ],
   "authors": [
@@ -24,7 +28,6 @@
     "lib-curl": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.0.*"
   },
   "autoload": {
     "psr-4": {"MultiHttp\\": "src"}
