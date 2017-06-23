@@ -40,7 +40,6 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?&1', $response->request->getURI());
 						$this->assertEquals(Request::HEAD, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
-						$this->assertTrue($response->request->hasInitialized());
 					}
 				],
 
@@ -57,7 +56,6 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?&a', $response->request->getURI());
 						$this->assertEquals(Request::GET, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
-						$this->assertTrue($response->request->hasInitialized());
 						$this->assertNotContains('this_is_post_data', $response->body);
 					}
 				],
@@ -73,7 +71,6 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 						$this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?&b', $response->request->getURI());
 						$this->assertEquals(Request::POST, $response->request->getIni('method'));
 						$this->assertTrue($response->request->hasEndCallback());
-						$this->assertTrue($response->request->hasInitialized());
 						$this->assertContains('this_is_post_data', $response->body);
 					}
 				],
@@ -93,7 +90,6 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 					'callback' => function (Response $response) {
 						$this->assertContains('http://www.qq.com', $response->request->getUri());
 						$this->assertTrue($response->request->hasEndCallback());
-						$this->assertTrue($response->request->hasInitialized());
 					},
 				],
 				[

@@ -79,8 +79,7 @@ class Request extends Http {
 	 * @return bool|mixed
 	 */
 	public function getIni($field) {
-		if (!$this->hasInitialized()) {throw new InvalidOperationException('options has not been initialized');
-		}
+//		if (!$this->hasInitialized()) {throw new InvalidOperationException('options has not been initialized');}
 
 		$alias = self::optionAlias($field);
 		if (null === ($rawField = constant($alias))) {throw new InvalidArgumentException('field is invalid');

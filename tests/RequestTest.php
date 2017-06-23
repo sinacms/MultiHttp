@@ -64,14 +64,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
             'callback' => function (Response $response) {
                 $this->assertTrue ($response->request->hasEndCallback());
-                $this->assertTrue ($response->request->hasInitialized());
             }])->execute();
 
         $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::PATCH,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
-                $this->assertTrue ($response->request->hasInitialized());
             }])->addOptions([
             'method' => Request::PATCH
         ])->execute();
@@ -81,7 +79,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::POST,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
-                $this->assertTrue ($response->request->hasInitialized());
                 $this->assertContains('this_is_post_data', $response->body);
 
             }])->execute();
@@ -90,7 +87,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::POST,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
-                $this->assertTrue ($response->request->hasInitialized());
                 $this->assertNotContains('this_is_post_data', $response->body);
 
             }])->execute();

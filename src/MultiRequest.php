@@ -96,13 +96,13 @@ class MultiRequest {
 		$return = array();
 		foreach (self::$requestPool as $request) {
 			$response = $request->makeResponse(true);
-			curl_multi_remove_handle(self::$multiHandler, $request->curlHandle);
-            curl_close($request->curlHandle);
             $func = $response->request->endCallback();
 			if (isset($func)) {
 				$func($response);
 			}
 			$return[] = $response;
+            curl_multi_remove_handle(self::$multiHandler, $request->curlHandle);
+            curl_close($request->curlHandle);
 		}
 		curl_multi_close(self::$multiHandler);
 		return $return;
