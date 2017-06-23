@@ -124,7 +124,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
         }
         $end = microtime(1);
         echo 'multi total takes:', $end - $start, ' secs;';
-        $this->assertTrue($end - $start < 4);
+        $this->assertTrue($end - $start < 5);
     }
 
     protected function setUp()
