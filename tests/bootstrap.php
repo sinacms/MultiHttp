@@ -20,5 +20,7 @@ var_dump($r);
 $r = \MultiHttp\MultiRequest::create()->add('GET','http://www.facebook.com', [], ['timeout'=>2])->execute();
 var_dump($r);
 
+echo `ifconfig -a`;
+
 
 
