@@ -70,29 +70,30 @@ class MultiRequest {
 	 */
 	public function execute() {
 		$sleepTime = 1000;//microsecond, prevent  CPU 100%
-
+        //prepare conf
 		while (($multiFlg = curl_multi_exec(self::$multiHandler, $active)) == CURLM_CALL_MULTI_PERFORM);
+        //fetch data
+//        while ($active && $multiFlg == CURLM_OK) {
+//            if (curl_multi_select(self::$multiHandler) != -1) {
+//                while (curl_multi_exec(self::$multiHandler, $active) === CURLM_CALL_MULTI_PERFORM);
+//
+//                do {
+//                    $multiFlg = curl_multi_exec(self::$multiHandler, $active);
+//                } while ($multiFlg == CURLM_CALL_MULTI_PERFORM);
+//            }
+//        }
 
-		while ($active && $multiFlg == CURLM_OK) {
-			// Wait for activity on any curl-connection
-			while (curl_multi_exec(self::$multiHandler, $active) === CURLM_CALL_MULTI_PERFORM);
-			// bug in PHP 5.3.18+ where curl_multi_select can return -1
-			// https://bugs.php.net/bug.php?id=63411
-			if (curl_multi_select(self::$multiHandler) == -1) {
-				usleep($sleepTime);
-			}
 
-			usleep($sleepTime);
-		}
-        /*
         do{
             curl_multi_exec(self::$multiHandler, $active);
+            // bug in PHP 5.3.18+ where curl_multi_select can return -1
+			// https://bugs.php.net/bug.php?id=63411
             if (curl_multi_select(self::$multiHandler) === -1) {
                 usleep($sleepTime);
             }
             usleep($sleepTime);
         }while($active);
-        */
+
 
         $return = array();
 		foreach (self::$requestPool as $request) {
