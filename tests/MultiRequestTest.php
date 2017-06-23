@@ -23,7 +23,6 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase {
 	}
 	function test() {
 		$start = microtime(1);
-var_dump($_ENV);
 		$mc  = \MultiHttp\MultiRequest::create();
 		$rtn = $mc->addOptions(
 			[
