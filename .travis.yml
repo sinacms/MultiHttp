@@ -9,7 +9,8 @@ php:
   - hhvm # on Trusty only
 
 before_script:
+  - phpenv config-add php.ext.ini
 #  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
+  - composer install --no-interaction
 
 script: phpunit

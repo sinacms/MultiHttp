@@ -2,7 +2,8 @@
 
     This is high performance PHP curl wrapper written in php.
     
-    ![icon](https://img.shields.io/travis/sinacms/MultiHttp.svg)
+![icon](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)    
+    
     
 ##Installation
    
