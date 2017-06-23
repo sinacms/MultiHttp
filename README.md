@@ -1,17 +1,17 @@
 # MultiHttp
-
+    
+![icon](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)
     This is high performance PHP curl wrapper written in php.
     
-![icon](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)    
     
     
-##Installation
+## Installation
    
    You can use composer to install this library from the command line.
    
    composer install
    
-##Usage
+## Usage
 
 ### Single cURL:
 
@@ -28,20 +28,12 @@ $responses[] = Request::create()->addQuery('wd=good')->get('http://baidu.com?', 
 
           }])->execute();
 
-$responses[] = Request::create()->addQuery('sleepSecs=0')->trace('http://baidu.com', [
-          'timeout' => 3,
-          'timeout_ms' => 2000,
-          'callback' => function (Response $response) {
-              //todo
-          }])->execute();
-
 $responses[] = Request::create()->get('http://qq.com', [
           'callback' => function (Response $response) {
               //todo
           }])->addOptions([
           'method' => Request::PATCH
       ])->execute();
-
       //test post
 $responses[] = Request::create()->post(
       'http://127.0.0.1',['data'=>'this_is_post_data'], [
@@ -71,7 +63,7 @@ $rtn = $mc->addOptions(
                 //todo
             }
         ],
-        ])
+    ])
     ->add('GET', 'http://sina.cn',[], [
         'timeout' => 3
     ])
