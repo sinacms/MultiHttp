@@ -17,7 +17,7 @@ class Response
 {
     public
         $code,
-        $errno,
+        $errorCode,
         $error,
         $header,
         $body,
@@ -33,12 +33,12 @@ class Response
     {
     }
 
-    public static function create(Request $request, $body, $info, $errno, $error){
+    public static function create(Request $request, $body, $info, $errorCode, $error){
         $self = new self;
         $self->request = $request;
         $self->body = $body;
         $self->info = $info;
-        $self->errno = $errno;
+        $self->errorCode = $errorCode;
         $self->error = $error;
         $self->parse();
         $self->check();
