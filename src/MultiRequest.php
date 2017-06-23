@@ -83,7 +83,6 @@ class MultiRequest {
 //            }
 //        }
 
-$t1=microtime(1);
         do{
             curl_multi_exec(self::$multiHandler, $active);
             // bug in PHP 5.3.18+ where curl_multi_select can return -1
@@ -93,8 +92,6 @@ $t1=microtime(1);
             }
             usleep($sleepTime);
         }while($active);
-        $t2=microtime(1);
-var_dump('diff', $t2-$t1);
         $return = array();
 		foreach (self::$requestPool as $request) {
 			$response = $request->makeResponse(true);
