@@ -12,10 +12,10 @@
     </filter>
     <php>
         <const name="WEB_SERVER_HOST" value="0.0.0.0" />
-        <const name="WEB_SERVER_PORT" value="1350" />
+        <const name="WEB_SERVER_PORT" value="7777" />
         <const name="WEB_SERVER_DOCROOT" value="tests" />
     </php>
     <logging>
-        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
     </logging>
 </phpunit>
