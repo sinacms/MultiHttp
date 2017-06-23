@@ -89,19 +89,10 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     },
                 ],
                 [
-                    'url' => 'http://www.facebook.com',
-                    'timeout' => 3,
-                    'callback' => function (Response $response) {
-						$this->assertTrue($response->hasErrors());
-						$this->assertFalse(strlen($response->body) > 0);
-                    }
-                ],
-                [
                     'url' => 'http://www.proxy.com',
                     'ip' => '127.0.0.1',
                     'timeout' => 1,
                     'callback' => function (Response $response) {
-                        //$this->assertTrue($response->info['']);
                         $this->assertTrue($response->hasErrors());
                         $this->assertFalse(strlen($response->body) > 0);
                     }
