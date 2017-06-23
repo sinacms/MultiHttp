@@ -13,7 +13,7 @@ header('X-CMS-INFO: test');
 header('X-CMS-invalid');
 
 $secs = isset($_GET['sleepSecs'])?$_GET['sleepSecs']:0;
-sleep($secs);
+//sleep($secs);
 echo json_encode([
 		'method'    => $_SERVER['REQUEST_METHOD'],
 		'sleepSecs' => $secs,

@@ -17,6 +17,7 @@ use MultiHttp\Exception\InvalidOperationException;
 class Request extends Http {
 	protected static $curlAlias = array(
 		'url'             => 'CURLOPT_URL',
+		'debug'           => 'CURLOPT_VERBOSE',//for debug verbose
 		'method'          => 'CURLOPT_CUSTOMREQUEST',
 		'data'            => 'CURLOPT_POSTFIELDS', // array or string , file begin with '@'
 		'ua'              => 'CURLOPT_USERAGENT',
