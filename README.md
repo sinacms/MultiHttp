@@ -1,6 +1,6 @@
 # MultiHttp
     
-
+![icon](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)
     This is high performance PHP curl wrapper written in php.
 
     
@@ -41,7 +41,7 @@ $responses[] = Request::create()->post(
           }])->execute();
 
 foreach ($responses as $response) {
-  echo $response->request->getUri(), ' takes:', $response->duration,  "\n\t\n\t";
+  echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
 }      
 ``` 
 
@@ -74,7 +74,7 @@ $rtn = $mc->addOptions(
             }])->applyOptions())
 	->execute();
     foreach ($rtn as $response) {
-        echo $response->request->getUri(), ' takes:', $response->duration, ' ', "\n\t\n\t";
+        echo $response->request->getURI(), ' takes:', $response->duration, ' ', "\n\t\n\t";
     }
 
 ``` 

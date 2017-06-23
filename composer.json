@@ -5,10 +5,6 @@
   "type": "library",
   "prefer-stable": true,
   "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/sinacms/MultiHttp"
-    }
   ],
   "authors": [
     {
@@ -24,6 +20,7 @@
     "lib-curl": "*"
   },
   "require-dev": {
+    "phpunit/phpunit": "~4.0"
   },
   "autoload": {
     "psr-4": {"MultiHttp\\": "src"}

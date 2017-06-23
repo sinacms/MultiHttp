@@ -23,32 +23,29 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->inst = Request::create();
-        #$this->assertTrue(get_class($this->inst) == Request::class);
     }
     function test()
     {
         $start = microtime(1);
         $responses = [];
-        $responses[] = Request::create()->addQuery('sleepSecs=0')->trace(TEST_SERVER.'/dynamic/blocking.php', [
+        $responses[] = Request::create()->addQuery('sleepSecs=2')->trace(TEST_SERVER.'/dynamic/blocking.php', [
             'timeout' => 3,
             'timeout_ms' => 2000,
             'callback' => function (Response $response) {
-                #$this->assertLessThan(3,$response->duration);
-                #$this->assertGreaterThan(2,$response->duration);
-                $this->assertFalse($response->hasErrors(), $response->error);
-//                $this->assertFalse($response->body);
-                $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', $response->request->getURI());
+                $this->assertLessThan(3,$response->duration);
+                $this->assertGreaterThan(2,$response->duration);
+                $this->assertTrue($response->hasErrors(), $response->error);
+                $this->assertFalse($response->body);
+                $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=2', $response->request->getURI());
             }])->execute();
 
-        $responses[] = Request::create()->addQuery(['sleepSecs'=>0])->trace(TEST_SERVER.'/dynamic/blocking.php', [
+        $responses[] = Request::create()->addQuery(['sleepSecs'=>2])->trace(TEST_SERVER.'/dynamic/blocking.php', [
             'timeout_ms' => 2000,
             'timeout' => 3,
             'callback' => function (Response $response) {
-//                $this->assertLessThan(3,$response->duration);
-//                $this->assertGreaterThan(2,$response->duration);
+                $this->assertLessThan(3,$response->duration);
+                $this->assertGreaterThan(2,$response->duration);
                 $this->assertTrue (strlen($response->body)>0);
-
                 $this->assertFalse($response->hasErrors());
                 $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', $response->request->getURI());
             }])->execute();
@@ -92,7 +89,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         echo "\n\t\n\texec done\n\t\n\t";
         foreach ($responses as $response) {
-            echo $response->request->getUri(), ' takes:', $response->duration,  "\n\t\n\t";
+            echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
         }
         $end = microtime(1);
         echo 'total takes:', $end-$start, ' secs;';
