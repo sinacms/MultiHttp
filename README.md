@@ -16,7 +16,7 @@
 ### Single cURL:
 
 
-```
+```php
 <?php
 // Include Composer's autoload file if not already included.
 require '../vendor/autoload.php'; 
@@ -48,7 +48,8 @@ foreach ($responses as $response) {
 
  Multi cURL:
  
-```
+```php
+<?php
 require '../vendor/autoload.php'; 
 $mc  = \MultiHttp\MultiRequest::create();
 $rtn = $mc->addOptions(
