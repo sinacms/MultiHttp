@@ -88,10 +88,10 @@ class MultiRequest {
             curl_multi_exec(self::$multiHandler, $active);
             // bug in PHP 5.3.18+ where curl_multi_select can return -1
 			// https://bugs.php.net/bug.php?id=63411
-            if (curl_multi_select(self::$multiHandler) === -1) {
+            if (curl_multi_select(self::$multiHandler) == -1) {
                 usleep($sleepTime);
             }
-            usleep($sleepTime);
+//            usleep($sleepTime);
         }while($active);
 
 
