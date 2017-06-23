@@ -60,7 +60,6 @@ class MultiRequest {
 	public function import(Request $request) {
 		if (!is_resource($request->curlHandle)) {throw new InvalidArgumentException('Request curl handle is not initialized');
 		}
-
 		curl_multi_add_handle(self::$multiHandler, $request->curlHandle);
 		self::$requestPool[] = $request;
 		return $this;
