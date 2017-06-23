@@ -70,7 +70,7 @@ class MultiRequest {
 	 */
 	public function execute() {
 		$sleepTime = 1000;//microsecond, prevent  CPU 100%
-/*
+
 		while (($multiFlg = curl_multi_exec(self::$multiHandler, $active)) == CURLM_CALL_MULTI_PERFORM);
 
 		while ($active && $multiFlg == CURLM_OK) {
@@ -78,13 +78,13 @@ class MultiRequest {
 			while (curl_multi_exec(self::$multiHandler, $active) === CURLM_CALL_MULTI_PERFORM);
 			// bug in PHP 5.3.18+ where curl_multi_select can return -1
 			// https://bugs.php.net/bug.php?id=63411
-			if (($f = curl_multi_select(self::$multiHandler)) === -1) {
+			if (curl_multi_select(self::$multiHandler) == -1) {
 				usleep($sleepTime);
 			}
 
 			usleep($sleepTime);
 		}
-*/
+        /*
         do{
             curl_multi_exec(self::$multiHandler, $active);
             if (curl_multi_select(self::$multiHandler) === -1) {
@@ -92,7 +92,9 @@ class MultiRequest {
             }
             usleep($sleepTime);
         }while($active);
-		$return = array();
+        */
+
+        $return = array();
 		foreach (self::$requestPool as $request) {
 			$response = $request->makeResponse(true);
             $func = $response->request->endCallback();
