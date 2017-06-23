@@ -15,7 +15,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 $r = file_get_contents(TEST_SERVER.'/dynamic/blocking.php');
 var_dump($r);
 
-$r = \MultiHttp\Request::create()->get('http://www.google.com', ['timeout'=>2]);
+$r = \MultiHttp\Request::create()->get('http://www.google.com', ['timeout'=>2])->execute();
 var_dump($r);
 
 
