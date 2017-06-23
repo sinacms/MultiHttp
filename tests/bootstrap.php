@@ -12,15 +12,6 @@ set_time_limit(0);
 require_once __DIR__.'/bootstrap-server.php';
 require_once __DIR__.'/../vendor/autoload.php';
 
-//$r = file_get_contents(TEST_SERVER.'/dynamic/blocking.php');
-//var_dump($r);
-//
-//$r = \MultiHttp\Request::create()->get('http://www.google.com', ['timeout'=>2])->execute();
-//var_dump($r);
-//$r = \MultiHttp\MultiRequest::create()->add('GET','http://www.facebook.com', [], ['timeout'=>2])->execute();
-//var_dump($r);
-//
-//echo `ifconfig -a`;
 
 
 

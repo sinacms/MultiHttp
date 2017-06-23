@@ -29,7 +29,8 @@ var_dump($_ENV);
 			[
 				[
 					'url'    => TEST_SERVER.'/dynamic/blocking.php?&1',
-					'method' => 'HEAD',
+                    'timeout' => 2,
+                    'method' => 'HEAD',
 					'data'   => [
 					],
 					'callback' => function (Response $response) {
@@ -117,7 +118,7 @@ var_dump($_ENV);
 					$this->assertContains('http://www.163.com', $response->request->getUri());
 				},
 			])
-			->add('GET', 'http://sina.cn', [
+			->add('GET', 'http://sina.cn',[], [
 				'timeout' => 3
 			])
 			->import(Request::create()->trace('http://sohu.cn', [
