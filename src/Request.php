@@ -221,10 +221,8 @@ class Request extends Http {
 		}
 
 		self::filterAndRaw($this->options);
-        var_dump($this->options);
 
         curl_setopt_array($this->curlHandle, $this->options);
-		//        curl_setopt($this->curlHandle, CURLOPT_VERBOSE, true);
 
 		return $this;
 	}
