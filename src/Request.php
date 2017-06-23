@@ -34,7 +34,7 @@ class Request extends Http {
 		'timeout_ms'      => 'CURLOPT_TIMEOUT_MS', // milliseconds,  libcurl version > 7.36.0 ,
 	);
 	public $curlHandle;
-	protected $options = array('header' => true, 'method' => self::GET, 'transfer' => true, 'follow_location' => true, 'timeout' => 0);
+	protected $options = array('CURLOPT_MAXREDIRS' => 10,'header' => true, 'method' => self::GET, 'transfer' => true, 'follow_location' => true, 'timeout' => 0);
 	protected $endCallback;
 	protected $withURIQuery;
 
