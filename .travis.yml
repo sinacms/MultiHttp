@@ -12,7 +12,7 @@ php:
 before_script:
   - phpenv config-add .php.ext.ini
 #  - composer self-update
-  - composer clear
+#  - composer clear
   - composer install --no-interaction
   - phpenv rehash
 
