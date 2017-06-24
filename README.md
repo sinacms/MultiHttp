@@ -31,7 +31,8 @@ $responses[] = Request::create()->get('http://qq.com', [
           'callback' => function (Response $response) {
               //todo
           }])->addOptions([
-          'method' => Request::PATCH
+          'method' => Request::PATCH,
+          'timeout' => 3,
       ])->execute();
       //test post
 $responses[] = Request::create()->post(

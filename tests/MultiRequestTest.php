@@ -93,6 +93,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     'ip' => '127.0.0.1',
                     'timeout' => 1,
                     'callback' => function (Response $response) {
+                var_dump($response->body);
                         $this->assertTrue($response->hasErrors());
                         $this->assertFalse(strlen($response->body) > 0);
                     }

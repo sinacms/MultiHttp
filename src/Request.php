@@ -12,7 +12,6 @@
 namespace MultiHttp;
 
 use MultiHttp\Exception\InvalidArgumentException;
-use MultiHttp\Exception\InvalidOperationException;
 
 class Request extends Http {
 	protected static $curlAlias = array(

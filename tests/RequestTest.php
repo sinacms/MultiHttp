@@ -86,6 +86,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertNotContains('this_is_post_data', $response->body);
 
             }])->execute();
+        $response = Request::create()->head(TEST_SERVER.'/dynamic/blocking.php?head', [
+            'callback' => function (Response $response) {
+            }
+        ])->applyOptions()->makeResponse();
+        $this->assertInstanceOf( '\MultiHttp\Response',$response);
+        $this->assertEmpty($response->body);
+        $this->assertNotEmpty($response->header);
 
         echo "\n\t\n\texec done\n\t\n\t";
         foreach ($responses as $response) {

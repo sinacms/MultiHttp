@@ -35,7 +35,7 @@ abstract class Http
 
     abstract function post($uri, array $payload = array(), array $options = array());
 
-    abstract function PATCH($uri, array $payload = array(), array $options = array());
+    abstract function patch($uri, array $payload = array(), array $options = array());
 
     abstract function put($uri, array $payload = array(), array $options = array());
 
