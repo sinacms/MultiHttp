@@ -27,8 +27,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     function test()
     {
         $start = microtime(1);
-        $responses = [];
-        $responses[] = Request::create()->addQuery('sleepSecs=2')->trace(TEST_SERVER.'/dynamic/blocking.php', [
+        $responses = array();
+        $responses[] = Request::create()->addQuery('sleepSecs=2')->trace(TEST_SERVER.'/dynamic/blocking.php', array(
             'timeout' => 3,
             'timeout_ms' => 2000,
             'callback' => function (Response $response) {
@@ -37,9 +37,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($response->hasErrors(), $response->error);
                 $this->assertFalse($response->body);
                 $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=2', $response->request->getURI());
-            }])->execute();
+            }))->execute();
 
-        $responses[] = Request::create()->addQuery(['sleepSecs'=>2])->trace(TEST_SERVER.'/dynamic/blocking.php', [
+        $responses[] = Request::create()->addQuery(array('sleepSecs'=>2))->trace(TEST_SERVER.'/dynamic/blocking.php', array(
             'timeout_ms' => 2000,
             'timeout' => 3,
             'callback' => function (Response $response) {
@@ -48,7 +48,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue (strlen($response->body)>0);
                 $this->assertFalse($response->hasErrors());
                 $this->assertEquals(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=2', $response->request->getURI());
-            }])->execute();
+            }))->execute();
 
         $responses[] = Request::create()->trace(TEST_SERVER.'/static/test.json')->onEnd(function (Response $response) {
             $this->assertFalse($response->hasErrors());
@@ -57,39 +57,39 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->assertJsonStringEqualsJsonFile(WEB_SERVER_DOCROOT.'/static/test.json', $response->body);
         })->execute();
 
-        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
+        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', array(
             'callback' => function (Response $response) {
                 $this->assertTrue ($response->request->hasEndCallback());
-            }])->execute();
+            }))->execute();
 
-        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', [
+        $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', array(
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::PATCH,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
-            }])->addOptions([
+            }))->addOptions(array(
             'method' => Request::PATCH
-        ])->execute();
+        ))->execute();
 
         //test post
-        $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',['data'=>'this_is_post_data'], [
+        $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',array('data'=>'this_is_post_data'), array(
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::POST,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
                 $this->assertContains('this_is_post_data', $response->body);
 
-            }])->execute();
-        $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',[], [
+            }))->execute();
+        $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',array(), array(
 //            'data' => 'data=this_is_post_data', //not work
             'callback' => function (Response $response) {
                 $this->assertEquals( Request::POST,$response->request->getIni('method'));
                 $this->assertTrue ($response->request->hasEndCallback());
                 $this->assertNotContains('this_is_post_data', $response->body);
 
-            }])->execute();
-        $response = Request::create()->head(TEST_SERVER.'/dynamic/blocking.php?head', [
+            }))->execute();
+        $response = Request::create()->head(TEST_SERVER.'/dynamic/blocking.php?head', array(
             'callback' => function (Response $response) {
             }
-        ])->applyOptions()->makeResponse();
+        ))->applyOptions()->makeResponse();
         $this->assertInstanceOf( '\MultiHttp\Response',$response);
         $this->assertEmpty($response->body);
         $this->assertNotEmpty($response->header);

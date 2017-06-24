@@ -24,13 +24,13 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
         $start = microtime(1);
         $mc = \MultiHttp\MultiRequest::create();
         $rtn = $mc->addOptions(
-            [
-                [
+            array(
+                array(
                     'url' => TEST_SERVER . '/dynamic/blocking.php?&1',
                     'timeout' => 2,
                     'method' => 'HEAD',
-                    'data' => [
-                    ],
+                    'data' => array(
+                    ),
                     'callback' => function (Response $response) {
                         $this->assertEquals(false, $response->body);
                         $this->assertTrue(is_array($response->header) && $response->header);
@@ -40,28 +40,28 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         $this->assertEquals(Request::HEAD, $response->request->getIni('method'));
                         $this->assertTrue($response->request->hasEndCallback());
                     }
-                ],
+                ),
 
-                [
+                array(
                     'url' => TEST_SERVER . '/dynamic/blocking.php?sleepSecs=&a',
                     'timeout' => 2,
-                    'data' => [
+                    'data' => array(
                         'data' => 'this_is_post_data'
-                    ],
+                    ),
                     'callback' => function (Response $response) {
                        $this->assertFalse($response->hasErrors(), $response->request->getURI() . $response->error);
                         $this->assertEquals(Request::GET, $response->request->getIni('method'));
                         $this->assertTrue($response->request->hasEndCallback());
                         $this->assertNotContains('this_is_post_data', $response->body);
                     }
-                ],
-                [
+                ),
+                array(
                     'url' => TEST_SERVER . '/dynamic/blocking.php?&b',
                     'method' => 'POST',
                     'timeout' => 2,
-                    'data' => [
+                    'data' => array(
                         'data' => 'this_is_post_data'
-                    ],
+                    ),
                     'callback' => function (Response $response) {
                         $this->assertFalse($response->hasErrors(), $response->request->getURI() . $response->error);
                         $this->assertEquals(TEST_SERVER . '/dynamic/blocking.php?&b', $response->request->getURI());
@@ -69,8 +69,8 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         $this->assertTrue($response->request->hasEndCallback());
                         $this->assertContains('this_is_post_data', $response->body);
                     }
-                ],
-                [
+                ),
+                array(
                     'url' => TEST_SERVER . '/static/test.json',
                     'timeout' => 2,
                     'callback' => function (Response $response) {
@@ -79,16 +79,16 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         $this->assertTrue(strlen($response->body) > 0);
                         $this->assertJsonStringEqualsJsonFile(WEB_SERVER_DOCROOT . '/static/test.json', $response->body);
                     }
-                ],
-                [
+                ),
+                array(
                     'url' => 'http://www.qq.com',
                     'timeout' => 3,
                     'callback' => function (Response $response) {
                         $this->assertContains('http://www.qq.com', $response->request->getURI());
                         $this->assertTrue($response->request->hasEndCallback());
                     },
-                ],
-                [
+                ),
+                array(
                     'url' => 'http://www.proxy.com',
                     'ip' => '127.0.0.1',
                     'timeout' => 1,
@@ -97,27 +97,27 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         $this->assertTrue($response->hasErrors());
                         $this->assertFalse(strlen($response->body) > 0);
                     }
-                ],
-            ])
-            ->add(\MultiHttp\Http::GET, 'http://www.163.com', [], [
+                ),
+            ))
+            ->add(\MultiHttp\Http::GET, 'http://www.163.com', array(), array(
                 'timeout' => 3,
                 'callback' => function (Response $response) {
                     $this->assertContains('http://www.163.com', $response->request->getURI());
                 },
-            ])
-            ->add('GET', 'http://sina.cn', [], [
+            ))
+            ->add('GET', 'http://sina.cn', array(), array(
                 'timeout' => 3
-            ])
-            ->import(Request::create()->trace('http://sohu.cn', [
+            ))
+            ->import(Request::create()->trace('http://sohu.cn', array(
                 'timeout' => 3,
                 'callback' => function (Response $response) {
                     $this->assertContains('http://sohu.cn', $response->request->getURI());
-                }])->applyOptions())
-            ->import(Request::create()->options('http://toutiao.com', [
+                }))->applyOptions())
+            ->import(Request::create()->options('http://toutiao.com', array(
                 'timeout' => 3,
                 'callback' => function (Response $response) {
                     $this->assertContains('http://toutiao.com', $response->request->getURI());
-                }])->applyOptions())
+                }))->applyOptions())
             ->execute();
         echo "exec done\n\t";
         foreach ($rtn as $response) {
