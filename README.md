@@ -11,8 +11,10 @@
 ## Installation
    
    You can use composer to install this library from the command line.
-   
-   composer install
+```bash
+composer install
+```   
+
    
 ## Usage
 
@@ -49,6 +51,7 @@ foreach ($responses as $response) {
   echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
 }      
 ``` 
+
 
  Multi cURL:
  
