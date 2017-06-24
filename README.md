@@ -5,9 +5,15 @@
 ![icon](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/coverage.png?b=master)
     
     
-    This is high performance PHP curl wrapper written in php.
+    This is high performance PHP curl wrapper written in PHP.
+	It's compatible with PHP 5.3+.
 
     
+## Feature
+ - alias of curl option, e.g.  'timeout' equals 'CURLOPT_TIMEOUT' etc.
+ - Request  and  MultiRequest class  ,  can be used in any combination 
+ - graceful and efficient
+
 ## Installation
    
    You can use composer to install this library from the command line.
