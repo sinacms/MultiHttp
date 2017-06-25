@@ -78,8 +78,6 @@ class Request extends Http {
 	 * @return bool|mixed
 	 */
 	public function getIni($field) {
-//		if (!$this->hasInitialized()) {throw new InvalidOperationException('options has not been initialized');}
-
 		$alias = self::optionAlias($field);
 		if (null === ($rawField = constant($alias))) {throw new InvalidArgumentException('field is invalid');
 		}
@@ -87,9 +85,6 @@ class Request extends Http {
 		return isset($this->options[$rawField])?$this->options[$rawField]:false;
 	}
 
-	public function hasInitialized() {
-		return $this->curlHandle?true:false;
-	}
 
 	public function addQuery($data) {
 		if (!empty($data)) {
@@ -108,7 +103,7 @@ class Request extends Http {
 		return $this->ini(Http::POST, $uri, $payload, $options);
 	}
 
-	public function ini($method, $url, array $data = array(), array $options = array()) {
+	protected function ini($method, $url, array $data = array(), array $options = array()) {
 		$options = array('url' => $url, 'method' => $method, 'data' => $data)+$options;
 		$this->addOptions($options);
 

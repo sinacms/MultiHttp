@@ -1,5 +1,6 @@
 # MultiHttp
-    
+============ 
+============    
 [![](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)](https://travis-ci.org/sinacms/MultiHttp)
 [![](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sinacms/MultiHttp)
 [![](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/sinacms/MultiHttp/)
@@ -10,9 +11,16 @@
 
 ## Contents
 
- * [Feature](#Feature)
+ * [Feature](#feature)
  * [Installation](#installation)
  * [Usage](#usage)
+   * [Single cURL]()
+ * [Documentation](#documentation)
+  * [Request](#request)
+  * [MultiRequest](#multiRequest)
+ 
+
+
 
     
 ## Feature
@@ -65,7 +73,7 @@ foreach ($responses as $response) {
 ``` 
 
 
- Multi cURL:
+### Multi cURL:
  
 ```php
 <?php
@@ -98,4 +106,25 @@ $rtn = $mc->addOptions(
     }
 
 ``` 
- 
+
+## Documentation 
+  * ### Request
+   * public static function create()
+   * public function endCallback()
+   * public function hasEndCallback()
+   * public function onEnd(callable$callback)
+   * public function getURI()
+   * public function getIni($field)
+   * public function addQuery($data)
+   * public function post($uri, array $payload = array(), array $options = array())
+   * public function addOptions(array $options = array())
+   * public function get($uri, array $options = array())
+   * public function execute()
+   * public function applyOptions()
+   * public function makeResponse($isMultiCurl = false)
+  * ### MultiRequest
+   * public static function create()
+   * public function addOptions(array $URLOptions)
+   * public function add($method, $uri, array $payload = array(), array $options = array())
+   * public function import(Request $request)
+   * public function execute()
