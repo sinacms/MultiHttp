@@ -6,7 +6,7 @@
     
     
     This is high performance PHP curl wrapper written in PHP.
-	It's compatible with PHP 5.3+ and HHVM .
+	It's compatible with PHP 5.4+ and HHVM .
 
 ## Contents
 
