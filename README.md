@@ -1,8 +1,8 @@
 # MultiHttp
     
-[![https://travis-ci.org/sinacms/MultiHttp](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)](https://travis-ci.org/jmathai/php-multi-curl)
-![https://scrutinizer-ci.com/g/sinacms/MultiHttp/](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/quality-score.png?b=master)
-![https://scrutinizer-ci.com/g/sinacms/MultiHttp/](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/coverage.png?b=master)
+[![](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)](https://travis-ci.org/sinacms/MultiHttp)
+[![](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sinacms/MultiHttp)
+[![](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/sinacms/MultiHttp/)
     
     
     This is high performance PHP curl wrapper written in PHP.
@@ -10,18 +10,9 @@
 
 ## Contents
 
+ * [Feature](#Feature)
  * [Installation](#installation)
  * [Usage](#usage)
- * [Advanced Usage](#advanced-usage)
- * [Documentation](#documentation)
-   * [Methods](#methods)
-     * [addUrl](#addurl)
-     * [addCurl](#addcurl)
-     * [renderAscii](#renderascii)
-   * [Accessing Response](#accessing-response)
-     * [response](#response)
-     * [code](#code)
-     * [headers](#headers)
 
     
 ## Feature
@@ -30,10 +21,10 @@
  - graceful and efficient
 
 ## Installation
-   
+
    You can use composer to install this library from the command line.
 ```bash
-composer install
+composer require sinacms/MultiHttp
 ```   
 
    
