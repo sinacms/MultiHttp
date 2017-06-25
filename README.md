@@ -10,18 +10,18 @@
 
 ## Contents
 
-	* [Installation](#installation)
-	* [Usage](#usage)
-	* [Advanced Usage](#advanced-usage)
-	* [Documentation](#documentation)
-	  * [Methods](#methods)
-	    * [addUrl](#addurl)
-	    * [addCurl](#addcurl)
-	    * [renderAscii](#renderascii)
-	  * [Accessing Response](#accessing-response)
-	    * [response](#response)
-	    * [code](#code)
-	    * [headers](#headers)
+ * [Installation](#installation)
+ * [Usage](#usage)
+ * [Advanced Usage](#advanced-usage)
+ * [Documentation](#documentation)
+   * [Methods](#methods)
+     * [addUrl](#addurl)
+     * [addCurl](#addcurl)
+     * [renderAscii](#renderascii)
+   * [Accessing Response](#accessing-response)
+     * [response](#response)
+     * [code](#code)
+     * [headers](#headers)
 
     
 ## Feature
