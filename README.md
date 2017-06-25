@@ -13,7 +13,8 @@
  * [Feature](#feature)
  * [Installation](#installation)
  * [Usage](#usage)
-   * [Single cURL]()
+   * [Single-request](single-request)
+   * [Multi-request](multi-request)
  * [Documentation](#documentation)
    * [Request](#request)
    * [MultiRequest](#multiRequest)
@@ -37,7 +38,7 @@ composer require sinacms/MultiHttp
    
 ## Usage
 
-### Single cURL:
+### Single-request:
 
 
 ```php
@@ -72,7 +73,7 @@ foreach ($responses as $response) {
 ``` 
 
 
-### Multi cURL:
+### Multi-request:
  
 ```php
 <?php
