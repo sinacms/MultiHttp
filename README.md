@@ -1,12 +1,27 @@
 # MultiHttp
     
-![https://travis-ci.org/sinacms/MultiHttp](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)
+[![https://travis-ci.org/sinacms/MultiHttp](https://api.travis-ci.org/sinacms/MultiHttp.svg?branch=master)](https://travis-ci.org/jmathai/php-multi-curl)
 ![https://scrutinizer-ci.com/g/sinacms/MultiHttp/](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/quality-score.png?b=master)
 ![https://scrutinizer-ci.com/g/sinacms/MultiHttp/](https://scrutinizer-ci.com/g/sinacms/MultiHttp/badges/coverage.png?b=master)
     
     
     This is high performance PHP curl wrapper written in PHP.
 	It's compatible with PHP 5.3+ and HHVM .
+
+## Contents
+
+	* [Installation](#installation)
+	* [Usage](#usage)
+	* [Advanced Usage](#advanced-usage)
+	* [Documentation](#documentation)
+	  * [Methods](#methods)
+	    * [addUrl](#addurl)
+	    * [addCurl](#addcurl)
+	    * [renderAscii](#renderascii)
+	  * [Accessing Response](#accessing-response)
+	    * [response](#response)
+	    * [code](#code)
+	    * [headers](#headers)
 
     
 ## Feature
