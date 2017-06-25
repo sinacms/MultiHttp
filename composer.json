@@ -1,5 +1,5 @@
 {
-  "name": "sinacms/MultiHttp",
+  "name": "sinacms/multihttp",
   "description": "a tool for  multi-curl written in php",
   "keywords": ["php","multi", "curl", "parallel", "concurrency", "async", "threads", "requests", "asynchronous", "http","rest", "restful", "api"],
   "type": "library",
@@ -10,7 +10,6 @@
     {
       "name": "george wu",
       "email": "sunsky303@gmail.com",
-      "homepage": "https://github.com/sinacms/MultiHttp.git"
     }
   ],
   "license": "Apache-2.0",
