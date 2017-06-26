@@ -69,7 +69,7 @@ $responses[] = Request::create()->post(
 
 foreach ($responses as $response) {
   echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
-}      
+}
 ``` 
 
 
