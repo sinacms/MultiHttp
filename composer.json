@@ -3,7 +3,6 @@
   "description": "a tool for  multi-curl written in php",
   "keywords": ["php","multi", "curl", "parallel", "concurrency", "async", "threads", "requests", "asynchronous", "http","rest", "restful", "api"],
   "type": "library",
-  "prefer-stable": true,
   "repositories": [
   ],
   "authors": [
