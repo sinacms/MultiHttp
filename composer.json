@@ -23,5 +23,6 @@
   },
   "autoload": {
     "psr-4": {"MultiHttp\\": "src"}
-  }
+  },
+  "minimum-stability": "dev"
 }
