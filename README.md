@@ -32,7 +32,7 @@
 
    You can use composer to install this library from the command line.
 ```bash
-composer require sinacms/MultiHttp
+composer require sinacms/multihttp
 ```   
 
    
@@ -44,7 +44,11 @@ composer require sinacms/MultiHttp
 ```php
 <?php
 // Include Composer's autoload file if not already included.
-require '../vendor/autoload.php'; 
+require __DIR__.'/vendor/autoload.php';
+use MultiHttp\Request;
+use MultiHttp\Response;
+
+
 $responses=array();
 $responses[] = Request::create()->addQuery('wd=good')->get('http://baidu.com?', array(
           'timeout' => 3,
@@ -55,7 +59,7 @@ $responses[] = Request::create()->addQuery('wd=good')->get('http://baidu.com?', 
 
 $responses[] = Request::create()->get('http://qq.com', array(
           'callback' => function (Response $response) {
-              //todo
+              //sth
           }))->addOptions(array(
           'method' => Request::PATCH,
           'timeout' => 3,
@@ -64,12 +68,13 @@ $responses[] = Request::create()->get('http://qq.com', array(
 $responses[] = Request::create()->post(
       'http://127.0.0.1',array('data'=>'this_is_post_data'), array(
           'callback' => function (Response $response) {
-              //todo
+              //sth
           }))->execute();
 
 foreach ($responses as $response) {
   echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
 }
+?>
 ``` 
 
 
@@ -77,9 +82,10 @@ foreach ($responses as $response) {
  
 ```php
 <?php
-require '../vendor/autoload.php'; 
-$mc  = \MultiHttp\MultiRequest::create();
-$rtn = $mc->addOptions(
+use MultiHttp\MultiRequest;
+
+$mr  = MultiRequest::create();
+$rtn = $mr->addOptions(
     array(
         array(
             'url'    => 'http://google.com',
@@ -88,7 +94,7 @@ $rtn = $mc->addOptions(
             'data'   => array(
             ),
             'callback' => function (Response $response) {
-                //todo
+                //sth
             }
         ),
     ))
@@ -98,13 +104,14 @@ $rtn = $mc->addOptions(
     ->import(Request::create()->trace('http://sohu.cn', array(
             'timeout'  => 3,
             'callback' => function (Response $response) {
-                //todo
+                //sth
             }))->applyOptions())
 	->execute();
     foreach ($rtn as $response) {
         echo $response->request->getURI(), ' takes:', $response->duration, ' ', "\n\t\n\t";
     }
 
+?>
 ``` 
 
 ## Documentation 
