@@ -1,7 +1,7 @@
 language: php
-sudo: required
-dist: trusty
-group: edge
+#sudo: required
+#dist: trusty
+#group: edge
 php:
   - '5.3'
   - '5.4'
