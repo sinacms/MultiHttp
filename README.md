@@ -116,6 +116,25 @@ $rtn = $mr->addOptions(
 
 ## Documentation 
   * ### Request
+   * #### option shorthand
+    		'url'             => 'CURLOPT_URL',
+    		'debug'           => 'CURLOPT_VERBOSE',//for debug verbose
+    		'method'          => 'CURLOPT_CUSTOMREQUEST',
+    		'data'            => 'CURLOPT_POSTFIELDS', // array or string , file begin with '@'
+    		'ua'              => 'CURLOPT_USERAGENT',
+    		'timeout'         => 'CURLOPT_TIMEOUT', // (secs) 0 means indefinitely
+    		'connect_timeout' => 'CURLOPT_CONNECTTIMEOUT',
+    		'referer'         => 'CURLOPT_REFERER',
+    		'binary'          => 'CURLOPT_BINARYTRANSFER',
+    		'port'            => 'CURLOPT_PORT',
+    		'header'          => 'CURLOPT_HEADER', // TRUE:include header
+    		'headers'         => 'CURLOPT_HTTPHEADER', // array
+    		'download'        => 'CURLOPT_FILE', // writing file stream (using fopen()), default is STDOUT
+    		'upload'          => 'CURLOPT_INFILE', // reading file stream
+    		'transfer'        => 'CURLOPT_RETURNTRANSFER', // TRUE:return string; FALSE:output directly (curl_exec)
+    		'follow_location' => 'CURLOPT_FOLLOWLOCATION',
+    		'timeout_ms'      => 'CURLOPT_TIMEOUT_MS', // milliseconds,  libcurl version > 7.36.0 ,
+   
    * public static function create()
    * public function endCallback()
    * public function hasEndCallback()
