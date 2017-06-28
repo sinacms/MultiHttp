@@ -28,6 +28,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $start = microtime(1);
         $responses = array();
+        $responses[] = Request::create()->get('https://github.com/sinacms/MultiHttp', [
+            'CURLOPT_SSL_VERIFYPEER' => 0,
+            'CURLOPT_SSL_VERIFYHOST' => 0,
+            'timeout' => 4,
+            'callback' => function(Response $response){
+                echo strlen($response->body);
+                echo ($response->error);
+                $this->assertTrue(strlen($response->body)>0);
+            }
+        ])->execute();
         $responses[] = Request::create()->addQuery('sleepSecs=2')->trace(TEST_SERVER.'/dynamic/blocking.php', array(
             'timeout' => 3,
             'timeout_ms' => 2000,
