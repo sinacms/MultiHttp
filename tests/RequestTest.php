@@ -37,7 +37,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 echo ($response->error);
                 $this->assertTrue(strlen($response->body)>0);
             }
-        ])->execute();
+        ])->send();
         $responses[] = Request::create()->addQuery('sleepSecs=2')->trace(TEST_SERVER.'/dynamic/blocking.php', array(
             'timeout' => 3,
             'timeout_ms' => 2000,
@@ -65,12 +65,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(TEST_SERVER.'/static/test.json', $response->request->getURI());
             $this->assertTrue (strlen($response->body)>0);
             $this->assertJsonStringEqualsJsonFile(WEB_SERVER_DOCROOT.'/static/test.json', $response->body);
-        })->execute();
+        })->send();
 
         $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', array(
             'callback' => function (Response $response) {
                 $this->assertTrue ($response->request->hasEndCallback());
-            }))->execute();
+            }))->send();
 
         $responses[] = Request::create()->get(TEST_SERVER.'/dynamic/blocking.php?sleepSecs=0', array(
             'callback' => function (Response $response) {
@@ -78,7 +78,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue ($response->request->hasEndCallback());
             }))->addOptions(array(
             'method' => Request::PATCH
-        ))->execute();
+        ))->send();
 
         //test post
         $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',array('data'=>'this_is_post_data'), array(
@@ -87,7 +87,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue ($response->request->hasEndCallback());
                 $this->assertContains('this_is_post_data', $response->body);
 
-            }))->execute();
+            }))->send();
         $responses[] = Request::create()->post(TEST_SERVER.'/dynamic/blocking.php',array(), array(
 //            'data' => 'data=this_is_post_data', //not work
             'callback' => function (Response $response) {
@@ -95,7 +95,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue ($response->request->hasEndCallback());
                 $this->assertNotContains('this_is_post_data', $response->body);
 
-            }))->execute();
+            }))->send();
         $response = Request::create()->head(TEST_SERVER.'/dynamic/blocking.php?head', array(
             'callback' => function (Response $response) {
             }

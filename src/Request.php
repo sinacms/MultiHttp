@@ -16,6 +16,7 @@ use MultiHttp\Exception\InvalidArgumentException;
 class Request extends Http {
 	protected static $curlAlias = array(
 		'url'             => 'CURLOPT_URL',
+		'uri'             => 'CURLOPT_URL',
 		'debug'           => 'CURLOPT_VERBOSE',//for debug verbose
 		'method'          => 'CURLOPT_CUSTOMREQUEST',
 		'data'            => 'CURLOPT_POSTFIELDS', // array or string , file begin with '@'
@@ -36,7 +37,6 @@ class Request extends Http {
 	public $curlHandle;
     protected $options = array(
         'CURLOPT_MAXREDIRS' => 10,
-//        'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//IPv4
         'header' => true,
         'method' => self::GET,
         'transfer' => true,
@@ -44,6 +44,8 @@ class Request extends Http {
         'timeout' => 0);
     protected $endCallback;
 	protected $withURIQuery;
+	protected static $logger;
+	protected $uri;
 
 	protected function __construct() {
 
@@ -70,7 +72,7 @@ class Request extends Http {
 	}
 
 	public function getURI() {
-		return $this->getIni('url');
+		return $this->uri;
 	}
 
 	/**
@@ -79,10 +81,9 @@ class Request extends Http {
 	 */
 	public function getIni($field) {
 		$alias = self::optionAlias($field);
-		if (null === ($rawField = constant($alias))) {throw new InvalidArgumentException('field is invalid');
-		}
-
-		return isset($this->options[$rawField])?$this->options[$rawField]:false;
+//		if (null === ($rawField = constant($alias))) {throw new InvalidArgumentException('field is invalid');
+//		}
+		return isset($this->options[$alias])?$this->options[$alias]:false;
 	}
 
 
@@ -112,22 +113,8 @@ class Request extends Http {
 
 	public function addOptions(array $options = array()) {
 		$this->options = $options+$this->options;
-		if (empty($this->options['url'])) {throw new InvalidArgumentException('url can not empty');
-		}
-
-		if (isset($this->options['data'])) {
-			$this->options['data'] = is_array($this->options['data'])?http_build_query($this->options['data']):$this->options['data'];//for better compatibility
-		}
-		if (isset($this->withURIQuery)) {
-			$this->options['url'] .= strpos($this->options['url'], '?') === FALSE?'?':'&';
-			$this->options['url'] .= $this->withURIQuery;
-		}
-		if (isset($this->options['callback'])) {
-			$this->onEnd($this->options['callback']);
-			unset($this->options['callback']);
-		}
-
-		return $this;
+        $this->uri = $this->options['url'];
+        return $this;
 	}
 
 	/*  no body  */
@@ -163,8 +150,8 @@ class Request extends Http {
 	/**
 	 * @return Response
 	 */
-	public function execute() {
-		$this->applyOptions();
+	public function send() {
+        $this->applyOptions();
 		$response = $this->makeResponse();
 		if ($this->endCallback) {
 			$func = $this->endCallback;
@@ -181,6 +168,21 @@ class Request extends Http {
 	}
 
 	protected function prepare() {
+        if (empty($this->options['url'])) {
+            throw new InvalidArgumentException('url can not empty');
+        }
+
+        if (isset($this->options['data'])) {
+            $this->options['data'] = is_array($this->options['data'])?http_build_query($this->options['data']):$this->options['data'];//for better compatibility
+        }
+        if (isset($this->withURIQuery)) {
+            $this->options['url'] .= strpos($this->options['url'], '?') === FALSE?'?':'&';
+            $this->options['url'] .= $this->withURIQuery;
+        }
+        if (isset($this->options['callback'])) {
+            $this->onEnd($this->options['callback']);
+            unset($this->options['callback']);
+        }
 		//swap ip and host
 		if (!empty($this->options['ip'])) {
 			$matches = array();
@@ -214,22 +216,24 @@ class Request extends Http {
 			}
 		}
 
-		self::filterAndRaw($this->options);
 
-        curl_setopt_array($this->curlHandle, $this->options);
+		$cURLOptions = self::filterAndRaw($this->options);
+
+        curl_setopt_array($this->curlHandle,  $cURLOptions);
 
 		return $this;
 	}
 
-	protected static function filterAndRaw(array&$options) {
+	protected static function filterAndRaw(array &$options) {
 		$opts = array();
 		foreach ($options as $key => $val) {
 			$alias = self::optionAlias($key);
-			unset($options[$key]);
-			if ($alias) {$opts[constant($alias)] = $val;
-			}
-		}
-		$options = $opts;
+            $options[$alias] = $val;
+            if ($alias) {$opts[constant($alias)] = $val;
+            }
+            unset($options[$key]);
+        }
+		return $opts;
 	}
 
 	/**
@@ -250,7 +254,26 @@ class Request extends Http {
 		$info     = curl_getinfo($this->curlHandle);
 		$errno    = curl_errno($this->curlHandle);
 		$error    = curl_error($this->curlHandle);
-		$response = Response::create($this, $body, $info, $errno, $error);
+        $response = Response::create($this, $body, $info, $errno, $error);
+        self::log($response);
 		return $response;
 	}
+
+    private static function log(Response $response)
+    {
+        if (is_null(self::$logger)) {
+            return;
+        }
+        if($response->hasErrors()){
+            self::$logger->error($response->request->getURI() . "\t" . $response->error, array(
+                'response' => print_r($response,1),
+            ));
+        }
+
+    }
+
+    public static function setLogger($logger)
+    {
+        self::$logger = $logger;
+    }
 }
