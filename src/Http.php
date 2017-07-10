@@ -31,11 +31,11 @@ abstract class Http {
 		'TRACE'   => self::TRACE,
 	);
 
-	abstract function post($uri, array $payload = array(), array $options = array());
+	abstract function post($uri, $payload = null, array $options = array());
 
-	abstract function patch($uri, array $payload = array(), array $options = array());
+	abstract function patch($uri, $payload = null, array $options = array());
 
-	abstract function put($uri, array $payload = array(), array $options = array());
+	abstract function put($uri, $payload = null, array $options = array());
 
 	abstract function get($uri, array $options = array());
 

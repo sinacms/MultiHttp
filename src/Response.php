@@ -48,7 +48,8 @@ class Response
 
     }
     public function parse(){
-        if($this->body && $this->request->getIni('header')){//has header
+        //has header
+        if($this->request->getIni('header')){
             $headers = rtrim(substr($this->body, 0, $this->info['header_size']));
             $this->body = substr($this->body, $this->info['header_size']);
             $headers = explode(PHP_EOL, $headers);

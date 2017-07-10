@@ -47,7 +47,7 @@ class MultiRequest {
 		return $this;
 	}
 
-	public function add($method, $uri, array $payload = array(), array $options = array()) {
+	public function add($method, $uri, $payload, array $options = array()) {
 		$options = array(
 			'method' => $method,
 			'url'    => $uri,
