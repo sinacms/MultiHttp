@@ -23,7 +23,7 @@ class MultiRequest
     {
     }
 
-    public static function create(): MultiRequest
+    public static function create()
     {
         if (!(self::$instance instanceof self)) {
             self::$instance = new self;
@@ -32,7 +32,7 @@ class MultiRequest
         return self::$instance;
     }
 
-    protected static function prepare(): void
+    protected static function prepare()
     {
         self::$multiHandler = curl_multi_init();
     }

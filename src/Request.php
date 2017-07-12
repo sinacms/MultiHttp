@@ -96,7 +96,7 @@ class Request extends Http
      * @param int $follow follow or not to follow or maximal number of redirects
      * @return Request
      */
-    public function follow(int $follow = self::MAX_REDIRECTS_DEFAULT)
+    public function follow(int $follow)
     {
         $this->maxRedirects = abs($follow);
         $this->followRedirects = $follow > 0;
