@@ -74,7 +74,7 @@ $responses[] = Request::create()->post(
           }))->execute();
 
 foreach ($responses as $response) {
-  echo $response->request->getURI(), ' takes:', $response->duration,  "\n\t\n\t";
+  echo $response->request->uri, ' takes:', $response->duration,  "\n\t\n\t";
 }
 ?>
 ``` 
@@ -110,7 +110,7 @@ $rtn = $mr->addOptions(
             }))->applyOptions())
 	->execute();
     foreach ($rtn as $response) {
-        echo $response->request->getURI(), ' takes:', $response->duration, ' ', "\n\t\n\t";
+        echo $response->request->uri, ' takes:', $response->duration, ' ', "\n\t\n\t";
     }
 
 ?>
@@ -141,7 +141,7 @@ $rtn = $mr->addOptions(
    * public function endCallback()
    * public function hasEndCallback()
    * public function onEnd(callable$callback)
-   * public function getURI()
+   * public function uri
    * public function getIni($field)
    * public function addQuery($data)
    * public function post($uri, array $payload = array(), array $options = array())

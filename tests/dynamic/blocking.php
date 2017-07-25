@@ -9,8 +9,7 @@
  * @copyright Sina Corp.
  */
 header('Content-type:application/json; charset=utf8');
-header('X-CMS-INFO: test');
-header('X-CMS-invalid');
+header('test1: from_server');
 
 $secs = isset($_GET['sleepSecs'])?$_GET['sleepSecs']:0;
 sleep($secs);
@@ -19,5 +18,6 @@ echo json_encode([
 		'sleepSecs' => $secs,
 		'uri'       => $_SERVER['REQUEST_URI'],
 		'post'      => $_POST,
+		'postRaw'      => file_get_contents("php://input"),
 		'get'       => $_GET,
 	]);

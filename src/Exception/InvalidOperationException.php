@@ -9,9 +9,14 @@
  * @since 1.0
  * @copyright Sina Corp.
  */
+
 namespace MultiHttp\Exception;
 
 
-class InvalidOperationException extends \LogicException{
-    protected $code = 2;
+/**
+ * Class InvalidOperationException
+ * @package MultiHttp\Exception
+ */
+class InvalidOperationException extends \LogicException
+{
 }
