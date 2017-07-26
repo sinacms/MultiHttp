@@ -108,7 +108,7 @@ class MultiRequest
     /**
      * @return array(Response)
      */
-    public function execute()
+    public function sendAll()
     {
         $sleepTime = 1000;//microsecond, prevent  CPU 100%
         do {

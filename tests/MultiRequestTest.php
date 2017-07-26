@@ -164,7 +164,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                 'callback' => function (Response $response) {
                     self::assertContains('http://toutiao.com', $response->request->uri);
                 }))->applyOptions())
-            ->execute();
+            ->sendAll();
         echo "exec done\n\t";
         foreach ($rtn as $response) {
             echo $response->request->uri, ' takes:', $response->duration, ' ', "\n\t\n\t";

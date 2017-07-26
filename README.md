@@ -57,7 +57,7 @@ $responses[] = Request::create()->addQuery('wd=good')->get('http://baidu.com?', 
           'timeout_ms' => 2000,
           'callback' => function (Response $response) {
 
-          }))->execute();
+          }))->send();
 
 $responses[] = Request::create()->get('http://qq.com', array(
           'callback' => function (Response $response) {
@@ -65,13 +65,13 @@ $responses[] = Request::create()->get('http://qq.com', array(
           }))->addOptions(array(
           'method' => Request::PATCH,
           'timeout' => 3,
-      ))->execute();
+      ))->send();
       //test post
 $responses[] = Request::create()->post(
       'http://127.0.0.1',array('data'=>'this_is_post_data'), array(
           'callback' => function (Response $response) {
               //sth
-          }))->execute();
+          }))->send();
 
 foreach ($responses as $response) {
   echo $response->request->uri, ' takes:', $response->duration,  "\n\t\n\t";
@@ -108,7 +108,7 @@ $rtn = $mr->addOptions(
             'callback' => function (Response $response) {
                 //sth
             }))->applyOptions())
-	->execute();
+	->send();
     foreach ($rtn as $response) {
         echo $response->request->uri, ' takes:', $response->duration, ' ', "\n\t\n\t";
     }
@@ -147,7 +147,7 @@ $rtn = $mr->addOptions(
    * public function post($uri, array $payload = array(), array $options = array())
    * public function addOptions(array $options = array())
    * public function get($uri, array $options = array())
-   * public function execute()
+   * public function send()
    * public function applyOptions()
    * public function makeResponse($isMultiCurl = false)
   * ### MultiRequest
@@ -155,4 +155,4 @@ $rtn = $mr->addOptions(
    * public function addOptions(array $URLOptions)
    * public function add($method, $uri, array $payload = array(), array $options = array())
    * public function import(Request $request)
-   * public function execute()
+   * public function sendAll()
