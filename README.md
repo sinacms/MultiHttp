@@ -156,3 +156,6 @@ $rtn = $mr->addOptions(
    * public function add($method, $uri, array $payload = array(), array $options = array())
    * public function import(Request $request)
    * public function sendAll()
+
+
+   [More][https://github.com/sinacms/MultiHttp/blob/master/usage.md](https://github.com/sinacms/MultiHttp/blob/master/usage.md)
