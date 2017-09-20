@@ -7,10 +7,10 @@
     
     This is high performance curl wrapper written in pure PHP.
     It's compatible with PHP 5.4+ and HHVM.
-    Notice that libcurl version must be over 7.36.0, libcurl version must be over 7.36.0， otherwise timeout can not suppert decimal.
+    Notice that libcurl version must be over 7.36.0,  otherwise timeout can not suppert decimal.
     
     这是一个高性能的PHP封装的HTTP Restful多线程并发请求库，参考借鉴了httpresful 、multirequest等优秀的代码。它与PHP 5.4和hhvm兼容。
-    注意，libcurl版本必须在7.36.0，libcurl版本必须在7.36.0，否则超时不支持小数。
+    注意，libcurl版本必须>=7.36.0，否则超时不支持小数。
     
     
 
