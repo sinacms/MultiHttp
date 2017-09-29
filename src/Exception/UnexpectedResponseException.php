@@ -9,14 +9,9 @@
  * @since 1.0
  * @copyright Sina Corp.
  */
-
 namespace MultiHttp\Exception;
 
 
-/**
- * Class UnexpectedResponseException
- * @package MultiHttp\Exception
- */
-class UnexpectedResponseException extends \UnexpectedValueException
-{
+class UnexpectedResponseException extends \UnexpectedValueException {
+    protected $code = 3;
 }

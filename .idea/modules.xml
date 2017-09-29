@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/lib_multi_curl.iml" filepath="$PROJECT_DIR$/.idea/lib_multi_curl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MultiHttp.iml" filepath="$PROJECT_DIR$/.idea/MultiHttp.iml" />
     </modules>
   </component>
 </project>

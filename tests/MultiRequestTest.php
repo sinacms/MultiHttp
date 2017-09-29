@@ -22,8 +22,178 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
     {
     }
 
+    function testFiles()
+    {
+        echo __METHOD__ , ' starting ', PHP_EOL;
+        $files = array(
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+////            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+////            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+////            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+////            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/front/20170621/EWeJ-fyhfxph6284203.jpg',
+//            'http://n.sinaimg.cn/auto/transform/20170621/jzwO-fyhfxph5858922.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/Yyju-fyhfxph5657320.jpg',
+//            'http://n.sinaimg.cn/default/8_img/uplaod/3933d981/20170621/404-error.jpg',
+            );
+        try{
+            $mr = MultiRequest::create()->setDefaults(['timeout'=>5]);
+            foreach ($files as $file){
+                $mr->add('GET', $file, null);
+            }
+            $rst = $mr->sendAll();
+        }catch(\Exception $e){
+            var_dump($e->getMessage());
+        }
+        $imgs = [];
+        foreach($rst as $item){
+            $base = base64_encode(($item->body) );
+            echo "\n ". $item->request->uri . " \n body size: ". strlen($base);
+            $imgs[]= [
+                'data'=>['img_data'=> $base],
+            ] ;
+        }
+        echo 'file size:'. sizeof($rst).PHP_EOL;
+        try{
+            $rst = MultiRequest::create()->setDefaults([
+                'timeout'=>3,
+                'method'=>'POST',
+                'url' => 'http://test.learn.pub.sina.com.cn:8181/'
+            ])->addOptions($imgs)->sendAll();
+        }catch(\Exception $e){
+            var_dump($e->getMessage());
+        }
+        if(is_array($rst)){
+            foreach($rst as   $item){
+                echo  " \n ". print_r([$item->body, $item->error, $item->code, $item->duration], 1);
+            }
+        }
+        echo __METHOD__ , ' end ', PHP_EOL;
+    }
+
     function test()
     {
+        die;
+        return false;
         $start = microtime(1);
         $mc = MultiRequest::create();
         $rtn = $mc->setDefaults(array(
@@ -39,7 +209,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         self::assertEquals(2, $response->request->getIni('timeout'));
                         self::assertEmpty($response->body);
 
-                        self::assertTrue(is_array($response->header) && sizeof($response->header)>0);
+                        self::assertTrue(is_array($response->header) && sizeof($response->header) > 0);
                         self::assertLessThan(1.5, $response->duration);
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
                         self::assertEquals(TEST_SERVER . '/dynamic/blocking.php?&1', $response->request->uri);
@@ -55,7 +225,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     ),
                     'callback' => function (Response $response) {
                         //test json
-                        self::assertEquals(true, strlen($response->body)>0);
+                        self::assertEquals(true, strlen($response->body) > 0);
                         self::assertJson($response->body);
                         //test setDefaults
                         self::assertEquals(2, $response->request->getIni('timeout'));
@@ -74,7 +244,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     ),
                     'callback' => function (Response $response) {
                         //test json
-                        self::assertEquals(true, strlen($response->body)>0);
+                        self::assertEquals(true, strlen($response->body) > 0);
                         self::assertJson($response->body);
                         //test setDefaults
                         self::assertEquals(2, $response->request->getIni('timeout'));
@@ -100,7 +270,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     'timeout' => 3,
                     'callback' => function (Response $response) {
                         //test json
-                        self::assertEquals(true, strlen($response->body)>0);
+                        self::assertEquals(true, strlen($response->body) > 0);
                         //test setDefaults
                         self::assertEquals(3, $response->request->getIni('timeout'));
 
@@ -110,7 +280,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                 ),
                 array(
                     'url' => 'http://proxy.test/dynamic/blocking.php',
-                    'ip' => WEB_SERVER_HOST ,
+                    'ip' => WEB_SERVER_HOST,
                     'port' => WEB_SERVER_PORT,
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
@@ -119,11 +289,11 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     }
                 ),
                 array(
-                    'url' => TEST_SERVER.'/dynamic/blocking.php',
+                    'url' => TEST_SERVER . '/dynamic/blocking.php',
                     'expectsMime' => 'json',
                     'sendMime' => 'json',
                     'method' => 'POST',
-                    'data' => array('aaa'=>'bbc'),
+                    'data' => array('aaa' => 'bbc'),
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
                         self::assertFalse($response->hasErrors());
@@ -133,11 +303,11 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     }
                 ),
                 array(
-                    'url' => TEST_SERVER.'/dynamic/blocking.php',
+                    'url' => TEST_SERVER . '/dynamic/blocking.php',
 //                    'expectsMime' => 'json',
 //                    'sendMime' => 'json',
                     'method' => 'POST',
-                    'data' => array('aaa'=>'bbc'),
+                    'data' => array('aaa' => 'bbc'),
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
                         self::assertFalse($response->hasErrors());

@@ -12,21 +12,9 @@
 namespace MultiHttp;
 
 use MultiHttp\Exception\InvalidArgumentException;
-use MultiHttp\Exception\InvalidOperationException;
 
-/**
- * Class Request
- * @package MultiHttp
- */
 class Request extends Http
 {
-    /**
-     * you can implement more traits
-     */
-    use JsonTrait;
-    /**
-     *
-     */
     const MAX_REDIRECTS_DEFAULT = 10;
     protected static $curlAlias = array(
         'url' => 'CURLOPT_URL',
@@ -47,133 +35,136 @@ class Request extends Http
         'transfer' => 'CURLOPT_RETURNTRANSFER', // TRUE:return string; FALSE:output directly (curl_exec)
         'follow_location' => 'CURLOPT_FOLLOWLOCATION',
         'timeout_ms' => 'CURLOPT_TIMEOUT_MS', // milliseconds,  libcurl version > 7.36.0 ,
-        /**
-         * private properties
-         */
-        'expectsMime' => null, //expected mime
-        'sendMime' => null, //send mime
-        'ip' => null,//specify ip to send request
-        'callback' => null,//callback on end
-
     );
-    protected static $loggerHandler;
+    protected static $logger;
+    public $curlHandle;
     public
-        $curlHandle,
         $uri,
-        $sendMime,
-        $expectedMime;
+        $timeout,
+        $maxRedirects,
+        $followRedirects;
+    public $cert;
+    public $key;
+    public $passphrase;
+    public $encoding;
+    public $payload;
     protected $options = array(
         'CURLOPT_MAXREDIRS' => 10,
-        'CURLOPT_SSL_VERIFYPEER' => false,//for https
-        'CURLOPT_SSL_VERIFYHOST' => 0,//for https
-        'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//ipv4 first
         'header' => true,
         'method' => self::GET,
         'transfer' => true,
-        'headers' => array(),
         'follow_location' => true,
         'timeout' => 0);
     protected $endCallback;
     protected $withURIQuery;
     protected $hasInitialized = false;
 
-    /**
-     * Request constructor.
-     */
     protected function __construct()
     {
+
     }
 
-    /**
-     * @return Request
-     */
     public static function create()
     {
         return new self;
     }
 
-    /**
-     * @param callable $handler
-     */
-    public static function setLogHandler(callable $handler)
+    public static function setLogger($logger)
     {
-        self::$loggerHandler = $handler;
+        self::$logger = $logger;
     }
 
     /**
-     * @param $parsedComponents
-     * @return string
-     */
-    private static function combineUrl($parsedComponents)
-    {
-        $scheme = isset($parsedComponents['scheme']) ? $parsedComponents['scheme'] . '://' : '';
-        $host = isset($parsedComponents['host']) ? $parsedComponents['host'] : '';
-        $port = isset($parsedComponents['port']) ? ':' . $parsedComponents['port'] : '';
-        $user = isset($parsedComponents['user']) ? $parsedComponents['user'] : '';
-        $pass = isset($parsedComponents['pass']) ? ':' . $parsedComponents['pass'] : '';
-        $pass = ($user || $pass) ? "$pass@" : '';
-        $path = isset($parsedComponents['path']) ? $parsedComponents['path'] : '';
-        $query = isset($parsedComponents['query']) ? '?' . $parsedComponents['query'] : '';
-        $fragment = isset($parsedComponents['fragment']) ? '#' . $parsedComponents['fragment'] : '';
-        return "$scheme$user$pass$host$port$path$query$fragment";
-    }
-
-    /**
-     * @param string $mime
-     * @return $this
-     */
-    public function expectsMime($mime = 'json')
-    {
-        $this->expectedMime = $mime;
-        return $this;
-    }
-
-    /**
-     * @param string $mime
+     * Specify   timeout
+     * @param float|int $timeout seconds to timeout the HTTP call
      * @return Request
      */
-    public function sendMime($mime = 'json')
+    public function timeout($timeout)
     {
-        $this->sendMime = $mime;
-        $this->addHeader('Content-type', Mime::getFullMime($mime));
+        $this->timeout = $timeout;
         return $this;
     }
 
-    /**
-     * @param $headerName
-     * @param $value , can be rawurlencode
-     * @return $this
-     */
-    public function addHeader($headerName, $value)
+    public function noFollow()
     {
-        $this->options['headers'][] = $headerName . ': ' . $value;
-        return $this;
+        return $this->follow(0);
     }
 
     /**
-     * @param $uri
-     * @return $this
+     * If the response is a 301 or 302 redirect, automatically
+     * send off another request to that location
+     * @param int $follow follow or not to follow or maximal number of redirects
+     * @return Request
      */
+    public function follow(int $follow)
+    {
+        $this->maxRedirects = abs($follow);
+        $this->followRedirects = $follow > 0;
+        return $this;
+    }
+
+    public function endCallback()
+    {
+        return $this->endCallback;
+    }
+
+    public function hasEndCallback()
+    {
+        return isset($this->endCallback);
+    }
+
     public function uri($uri)
     {
         $this->uri = $uri;
         return $this;
     }
 
-    /**
-     * @param $timeout seconds, can be float
-     * @return $this
-     */
-    public function timeout($timeout)
+    public function hasCert()
     {
-        $this->options['timeout'] = $timeout;
-        return $this;
+        return isset($this->cert) && isset($this->key);
     }
 
     /**
-     * @param array $headers
-     * @return $this
+     * Use Client Side Cert Authentication
+     * @param string $key file path to client key
+     * @param string $cert file path to client cert
+     * @param string $passphrase for client key
+     * @param string $encoding default PEM
+     * @return Request
      */
+    public function cert($cert, $key, $passphrase = null, $encoding = 'PEM')
+    {
+        $this->cert = $cert;
+        $this->key = $key;
+        $this->passphrase = $passphrase;
+        $this->encoding = $encoding;
+        return $this;
+    }
+
+    public function body($payload, $mimeType = null)
+    {
+        $this->mime($mimeType);
+        $this->payload = $payload;
+        // Iserntentially don't call _serializePayload yet.  Wait until
+        // we actually send off the request to convert payload to string.
+        // At that time, the `serialized_payload` is set accordingly.
+        return $this;
+    }
+    public function mime($mime)
+    {
+        if (empty($mime)) return $this;
+        $this->content_type = $this->expected_type = Mime::getFullMime($mime);
+        if ($this->isUpload()) {
+            $this->neverSerializePayload();
+        }
+        return $this;
+    }
+    public function addHeader($header_name, $value)
+    {
+        $this->headers[$header_name] = $value;
+        return $this;
+    }
+
     public function addHeaders(array $headers)
     {
         foreach ($headers as $header => $value) {
@@ -181,53 +172,45 @@ class Request extends Http
         }
         return $this;
     }
-
-    /**
-     * @return mixed
-     */
-    public function endCallback()
+    public function expectsType($mime)
     {
-        return $this->endCallback;
+        return $this->expects($mime);
     }
-
-    /**
-     * @return bool
-     */
-    public function hasEndCallback()
+    public function sendType($mime)
     {
-        return isset($this->endCallback);
+        return $this->contentType = $mime;
     }
-
+    public function expects($mime)
+    {
+        if (empty($mime)) return $this;
+        $this->expected_type = Mime::getFullMime($mime);
+        return $this;
+    }
     /**
      * @param $field alias or field name
      * @return bool|mixed
      */
-    public function getIni($field = null)
+    public function getIni($field)
     {
-        if(!$field) return $this->options;
-        $full = self::fullOption($field);
-        return isset($this->options[$full]) ? $this->options[$full] : false;
+        $alias = self::optionAlias($field);
+        return isset($this->options[$alias]) ? $this->options[$alias] : false;
     }
 
     /**
      * @param $key
      * @return mixed
      */
-    protected static function fullOption($key)
+    protected static function optionAlias($key)
     {
-        $full = false;
+        $alias = false;
         if (isset(self::$curlAlias[$key])) {
-            $full = self::$curlAlias[$key];
+            $alias = self::$curlAlias[$key];
         } elseif ((substr($key, 0, strlen('CURLOPT_')) == 'CURLOPT_') && defined($key)) {
-            $full = $key;
+            $alias = $key;
         }
-        return $full;
+        return $alias;
     }
 
-    /**
-     * @param $data
-     * @return $this
-     */
     public function addQuery($data)
     {
         if (!empty($data)) {
@@ -242,25 +225,14 @@ class Request extends Http
         return $this;
     }
 
-    /**
-     * @param $uri
-     * @param null $payload
-     * @param array $options
-     * @return Request
-     */
     public function post($uri, $payload = null, array $options = array())
     {
         return $this->ini(Http::POST, $uri, $payload, $options);
     }
 
-    /**
-     * @param $method
-     * @param $url
-     * @param $data
-     * @param array $options
-     * @return $this
-     */
-    protected function ini($method, $url, $data, array $options = array())
+    /*  no body  */
+
+    protected function ini($method, $url,  $data , array $options = array())
     {
         $options = array('url' => $url, 'method' => $method, 'data' => $data) + $options;
         $this->addOptions($options);
@@ -268,10 +240,6 @@ class Request extends Http
         return $this;
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
     public function addOptions(array $options = array())
     {
         $this->options = $options + $this->options;
@@ -279,108 +247,56 @@ class Request extends Http
         return $this;
     }
 
-    /**
-     * @param $uri
-     * @param null $payload
-     * @param array $options
-     * @return Request
-     */
     function put($uri, $payload = null, array $options = array())
     {
         return $this->ini(Http::PUT, $uri, $payload, $options);
     }
 
-    /**
-     * @param $uri
-     * @param null $payload
-     * @param array $options
-     * @return Request
-     */
     function patch($uri, $payload = null, array $options = array())
     {
         return $this->ini(Http::PATCH, $uri, $payload, $options);
     }
 
-    /**
-     * @param $uri
-     * @param array $options
-     * @return Request
-     */
     public function get($uri, array $options = array())
     {
         return $this->ini(Http::GET, $uri, array(), $options);
     }
 
-    /**
-     * @param $uri
-     * @param array $options
-     * @return Request
-     */
     function options($uri, array $options = array())
     {
         return $this->ini(Http::OPTIONS, $uri, array(), $options);
     }
 
-    /**
-     * @param $uri
-     * @param array $options
-     * @return Request
-     */
     function head($uri, array $options = array())
     {
         return $this->ini(Http::HEAD, $uri, array('CURLOPT_NOBODY' => true), $options);
     }
 
-    /**
-     * @param $uri
-     * @param array $options
-     * @return Request
-     */
     function delete($uri, array $options = array())
     {
         return $this->ini(Http::DELETE, $uri, array(), $options);
     }
 
-    /**
-     * @param $uri
-     * @param array $options
-     * @return Request
-     */
     function trace($uri, array $options = array())
     {
         return $this->ini(Http::TRACE, $uri, array(), $options);
     }
 
     /**
-     * @param bool $isMultiCurl
      * @return Response
      */
-    public function send($isMultiCurl = false)
+    public function send()
     {
-        try {
-            if (!$this->hasInitialized)
-                $this->applyOptions();
-            $response = $this->makeResponse($isMultiCurl);
-            $response->parse();
-        } catch (\Exception $e) {
-            if(!isset($response)) $response = Response::create($this, null, null, null, null);
-            $response->error = $e->getMessage();
-            $response->errorCode = 999;
-        }
-
-        if (self::$loggerHandler) {
-            call_user_func(self::$loggerHandler, $response);
-        }
+        if (!$this->hasInitialized)
+            $this->applyOptions();
+        $response = $this->makeResponse();
         if ($this->endCallback) {
-            call_user_func($this->endCallback, $response);
+            $func = $this->endCallback;
+            $func($response);
         }
-
         return $response;
     }
 
-    /**
-     * @return $this
-     */
     public function applyOptions()
     {
         $curl = curl_init();
@@ -390,41 +306,22 @@ class Request extends Http
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     protected function prepare()
     {
-        $this->options['url'] = trim($this->options['url']);
         if (empty($this->options['url'])) {
             throw new InvalidArgumentException('url can not empty');
         }
 
-        if(isset($this->options['expectsMime'])){
-            $this->expectsMime($this->options['expectsMime']);
-//            unset($this->options['expectsMime']);
+        if (isset($this->options['data'])) {
+            $this->options['data'] = is_array($this->options['data']) ? http_build_query($this->options['data']) : $this->options['data'];//for better compatibility
         }
-
-        if(isset($this->options['sendMime'])){
-            $this->sendMime($this->options['sendMime']);
-//            unset($this->options['sendMime']);
+        if (isset($this->withURIQuery)) {
+            $this->options['url'] .= strpos($this->options['url'], '?') === FALSE ? '?' : '&';
+            $this->options['url'] .= $this->withURIQuery;
         }
-
-        $this->serializeBody();
-
-        //try fix url
-        if (strpos($this->options['url'], '://') === FALSE) $this->options['url'] = 'http://' . $this->options['url'];
-        $components = parse_url($this->options['url']);
-        if(FALSE === $components) throw new InvalidArgumentException('formatting url occurs error: '. $this->options['url']);
-        if($this->withURIQuery){
-            if(isset($components['query'])) $components['query'] .= '&'. trim($this->withURIQuery);
-            else $components['query'] = trim($this->withURIQuery);
-        }
-        $this->options['url'] = self::combineUrl($components);
-
         if (isset($this->options['callback'])) {
             $this->onEnd($this->options['callback']);
-//            unset($this->options['callback']);
+            unset($this->options['callback']);
         }
         //swap ip and host
         if (!empty($this->options['ip'])) {
@@ -437,7 +334,7 @@ class Request extends Http
                 $this->options['headers'][] = 'Host: ' . $host;
             }
             $this->options['url'] = preg_replace('/\/\/([^\/]+)/', '//' . $this->options['ip'], $this->options['url']);
-//            unset($this->options['ip']);
+            unset($this->options['ip']);
             unset($host);
         }
         //process version
@@ -461,30 +358,13 @@ class Request extends Http
             }
         }
 
-
         $cURLOptions = self::filterAndRaw($this->options);
+
         curl_setopt_array($this->curlHandle, $cURLOptions);
 
         return $this;
     }
 
-    public function serializeBody()
-    {
-        if (isset($this->options['data'])) {
-            if (isset($this->sendMime)) {
-                $method = $this->sendMime;
-                if (!method_exists($this, $method)) throw new InvalidOperationException($method . ' is not exists in ' . __CLASS__);
-                $this->options['data'] = $this->$method($this->options['data']);
-            } else {
-                $this->options['data'] = is_array($this->options['data']) ? http_build_query($this->options['data']) : $this->options['data'];//for better compatibility
-            }
-        }
-    }
-
-    /**
-     * @param callable $callback
-     * @return $this
-     */
     public function onEnd(callable $callback)
     {
         if (!is_callable($callback)) {
@@ -495,40 +375,41 @@ class Request extends Http
         return $this;
     }
 
-    /**
-     * @param array $options
-     * @return array
-     */
     protected static function filterAndRaw(array &$options)
     {
-        $opts = $fullsOpts = array();
+        $opts = array();
         foreach ($options as $key => $val) {
-            $fullOption = self::fullOption($key);
-
-            if ($fullOption) {
-                $fullsOpts[$fullOption] = $val;
-                $opts[constant($fullOption)] = $val;
+            $alias = self::optionAlias($key);
+            $options[$alias] = $val;
+            if ($alias) {
+                $opts[constant($alias)] = $val;
             }
             unset($options[$key]);
         }
-        $options = $fullsOpts;
         return $opts;
     }
 
-    /**
-     * @param bool $isMultiCurl
-     * @return Response
-     * @throws \Exception
-     */
     public function makeResponse($isMultiCurl = false)
     {
         $body = $isMultiCurl ? curl_multi_getcontent($this->curlHandle) : curl_exec($this->curlHandle);
         $info = curl_getinfo($this->curlHandle);
-        $errorCode = curl_errno($this->curlHandle);
+        $errno = curl_errno($this->curlHandle);
         $error = curl_error($this->curlHandle);
-        $response = Response::create($this, $body, $info, $errorCode, $error);
+        $response = Response::create($this, $body, $info, $errno, $error);
+        if (!is_null(self::$logger)) {
+            self::log($response);
+        }
+
         return $response;
     }
 
+    private static function log(Response $response)
+    {
+        if ($response->hasErrors()) {
+            self::$logger->error($response->request->getURI() . "\t" . $response->error, array(
+                'response' => print_r($response, 1),
+            ));
+        }
 
+    }
 }
