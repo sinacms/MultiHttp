@@ -15,7 +15,7 @@ use MultiHttp\Exception\InvalidArgumentException;
  */
 class MultiRequest
 {
-    protected static $requestPool;
+    protected static $requestPool = array();
     protected static $multiHandler;
     private static $instance;
 
