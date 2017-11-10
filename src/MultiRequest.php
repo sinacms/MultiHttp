@@ -102,7 +102,7 @@ class MultiRequest
             curl_close($request->curlHandle);
         }
         curl_multi_close(self::$multiHandler);
-        self::$requestPool = [];
+        self::$requestPool = array();
         return $return;
     }
 
