@@ -96,7 +96,7 @@ class Request extends Http
      * @param int $follow follow or not to follow or maximal number of redirects
      * @return Request
      */
-    public function follow(int $follow)
+    public function follow($follow)
     {
         $this->maxRedirects = abs($follow);
         $this->followRedirects = $follow > 0;
@@ -388,12 +388,23 @@ class Request extends Http
         }
         return $opts;
     }
+    public $retryTimes = 1;
+    /**
+     * @var int seconds
+     */
+    public $retryDuration = 1;
 
     public function makeResponse($isMultiCurl = false)
     {
-        $body = $isMultiCurl ? curl_multi_getcontent($this->curlHandle) : curl_exec($this->curlHandle);
+        $handle = $this->curlHandle;
+        $body = $errno = null;
+        Helper::retry($this->retryTimes, function()use(&$body, &$errno, $isMultiCurl, $handle){
+            $body = $isMultiCurl ? curl_multi_getcontent($handle) : curl_exec($handle);
+            $errno = curl_errno($handle);
+            return 0 == $errno;
+        }, $this->retryDuration);
+
         $info = curl_getinfo($this->curlHandle);
-        $errno = curl_errno($this->curlHandle);
         $error = curl_error($this->curlHandle);
         $response = Response::create($this, $body, $info, $errno, $error);
         if (!is_null(self::$logger)) {
