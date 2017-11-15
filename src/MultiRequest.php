@@ -31,10 +31,19 @@ class MultiRequest
         self::prepare();
         return self::$instance;
     }
-
-    protected static function prepare()
+//    protected $isLazy = false;
+//    public function lazyStart(){
+//        $this->isLazy = true;
+//    }
+//    public function lazyEnd(){
+//        $this->isLazy = false;
+//        return $this->execute();
+//    }
+    protected function prepare()
     {
-        self::$multiHandler = curl_multi_init();
+//        if(is_null(self::$multiHandler) ||  !$this->isLazy){
+            self::$multiHandler = curl_multi_init();
+//        }
     }
 
     public function add($method, $uri, $payload, array $options = array())
@@ -47,6 +56,7 @@ class MultiRequest
         $this->addOptions(array($options));
         return $this;
     }
+
 
     /**
      * @param array $URLOptions
@@ -80,6 +90,7 @@ class MultiRequest
      */
     public function execute()
     {
+//        if($this->isLazy) return array();
         $sleepTime = 1000;//microsecond, prevent  CPU 100%
         do {
             curl_multi_exec(self::$multiHandler, $active);
@@ -103,6 +114,7 @@ class MultiRequest
         }
         curl_multi_close(self::$multiHandler);
         self::$requestPool = array();
+        self::$multiHandler = null;
         return $return;
     }
 

@@ -48,13 +48,23 @@ class Request extends Http
     public $passphrase;
     public $encoding;
     public $payload;
+    public $retryTimes;
+
+    /**
+     * @var int seconds
+     */
+    public $retryDuration;
     protected $options = array(
         'CURLOPT_MAXREDIRS' => 10,
         'header' => true,
         'method' => self::GET,
         'transfer' => true,
         'follow_location' => true,
-        'timeout' => 0);
+        'timeout' => 0,
+//        'ip' => null, //host, in string, .e.g: 172.16.1.1:888
+        'retry_times' => 1,//redo task when failed
+        'retry_duration' => 0,//in seconds
+    );
     protected $endCallback;
     protected $withURIQuery;
     protected $hasInitialized = false;
@@ -230,6 +240,18 @@ class Request extends Http
         return $this->ini(Http::POST, $uri, $payload, $options);
     }
 
+    /**
+     * @param $uri
+     * @param null $payload
+     * @param array $options
+     * @param null $response
+     * @return string
+     */
+    public function quickPost($uri, $payload = null, array $options = array(), &$response = null)
+    {
+        $response = $this->post($uri, $payload, $options)->send();
+        return $response->body;
+    }
     /*  no body  */
 
     protected function ini($method, $url,  $data , array $options = array())
@@ -260,6 +282,18 @@ class Request extends Http
     public function get($uri, array $options = array())
     {
         return $this->ini(Http::GET, $uri, array(), $options);
+    }
+
+    /**
+     * @param $uri
+     * @param array $options
+     * @param null $response
+     * @return string
+     */
+    public function quickGet($uri, array $options = array(), &$response = null)
+    {
+        $response = $this->get($uri, $options)->send();
+        return $response->body;
     }
 
     function options($uri, array $options = array())
@@ -310,6 +344,14 @@ class Request extends Http
     {
         if (empty($this->options['url'])) {
             throw new InvalidArgumentException('url can not empty');
+        }
+
+        if (isset($this->options['retry_times'])) {
+           $this->retryTimes = abs($this->options['retry_times']);
+        }
+
+        if (isset($this->options['retry_duration'])) {
+           $this->retryDuration = abs($this->options['retry_duration']);
         }
 
         if (isset($this->options['data'])) {
@@ -388,11 +430,7 @@ class Request extends Http
         }
         return $opts;
     }
-    public $retryTimes = 1;
-    /**
-     * @var int seconds
-     */
-    public $retryDuration = 1;
+
 
     public function makeResponse($isMultiCurl = false)
     {
@@ -401,6 +439,9 @@ class Request extends Http
         Helper::retry($this->retryTimes, function()use(&$body, &$errno, $isMultiCurl, $handle){
             $body = $isMultiCurl ? curl_multi_getcontent($handle) : curl_exec($handle);
             $errno = curl_errno($handle);
+            var_dump(curl_error($handle), time());
+            ob_flush();
+            flush();
             return 0 == $errno;
         }, $this->retryDuration);
 

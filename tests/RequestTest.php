@@ -20,12 +20,106 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
     }
 
+    function testQuick()
+    {
+        $response = null;
+        $uniqId = uniqid();
+        \MultiHttp\Request::create()->quickGet(TEST_SERVER . '/dynamic/flash.php' . '?aa=' . $uniqId, [
+            'timeout' => 1,
+            'retry_times' => 3,
+            'retry_duration' => 2,
+            'callback' => function (\MultiHttp\Response $response) use ($uniqId) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+                $this->assertContains($uniqId, $response->body, "assert error \n");
+                echo ($response->body) . "\n";
+            }
+        ], $response);
+        $uniqId = uniqid();
+        \MultiHttp\Request::create()->quickPost(TEST_SERVER . '/dynamic/flash.php',
+            [
+                'bb' => $uniqId
+            ]
+            , [
+                'timeout' => 1,
+                'retry_times' => 3,
+                'retry_duration' => 2,
+                'callback' => function (\MultiHttp\Response $response) use ($uniqId) {
+                    $this->assertInstanceOf('MultiHttp\Response', $response);
+                    $this->assertContains($uniqId, $response->body, "assert error \n");
+                    echo ($response->body) . "\n";
+                }
+            ], $response);
+        \MultiHttp\Request::create()->quickGet('http://google.com', [
+            'timeout' => 1,
+            'retry_times' => 3,
+            'retry_duration' => 2,
+            'callback' => function ($response) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+//                var_dump($response);
+            }
+        ], $response);
+        echo "\n\n\n";
+        \MultiHttp\Request::create()->quickPost('http://facebook.com', [], [
+            'timeout' => 3,
+            'retry_times' => 2,
+            'retry_duration' => 1,
+            'callback' => function ($response) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+//                var_dump($response);
+            }
+        ], $response);
+    }
+
+    function testLazy()
+    {
+        $mr = \MultiHttp\MultiRequest::create();
+        $mr->add('GET', 'http://sina.cn', array(), array(
+            'timeout' => 3,
+            'callback'=> function($response){
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+                $this->assertNotEmpty($response->body);
+                //do sth with response
+            }
+        ));
+        $mr->add('POST', 'http://baidu.cn', array(), array(
+            'timeout' => 3,
+            'callback'=> function($response){
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+                $this->assertNotEmpty($response->body);
+                //do sth with response
+            }
+        ));
+        //add ...
+//        $mr->execute();
+        $results = $mr->execute();
+        echo 'size of results : '. sizeof($results)."\n";
+    }
+
+    function testRetry()
+    {
+        $i = 0;
+        $trys = \MultiHttp\Helper::retry(5, function () use (&$i) {
+            if (++$i > 3) {
+                echo $i . "\n";
+                ob_flush();
+                flush();
+                return true;
+            } else {
+                echo $i . "\n";
+                ob_flush();
+                flush();
+                return false;
+            }
+        }, 1);
+        echo 'retry times: ' . $trys . "\n";
+    }
+
     function test()
     {
         $start = microtime(1);
         $responses = array();
-        Request::setLogHandler(function(Response $response){
-            echo PHP_EOL.'LogHandler: '. $response->request->uri . " info: " . $response->error. PHP_EOL;
+        Request::setLogHandler(function (Response $response) {
+            echo PHP_EOL . 'LogHandler: ' . $response->request->uri . " info: " . $response->error . PHP_EOL;
         });
         //test https get
         $responses[] = Request::create()->get('https://www.baidu.com/?q=cms&a=b#c=d', array(
@@ -45,7 +139,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 self::assertTrue($response->hasErrors(), $response->error);
                 self::assertTrue(!$response->body);
                 self::assertEquals(TEST_SERVER . '/dynamic/blocking.php', $response->request->uri);
-                self::assertEquals(true,$response->request->hasEndCallback());
+                self::assertEquals(true, $response->request->hasEndCallback());
             }))->send();
         //test expectsJson/headers
         $responses[] = Request::create()->addQuery('sleepSecs=2')->get(TEST_SERVER . '/dynamic/blocking.php#1', array(
@@ -55,10 +149,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 self::assertGreaterThan(2, $response->duration);
                 self::assertTrue(!$response->hasErrors(), $response->error);
                 self::assertTrue(is_array($response->body));
-                self::assertTrue(sizeof($response->body)>0);
+                self::assertTrue(sizeof($response->body) > 0);
                 self::assertEquals(TEST_SERVER . '/dynamic/blocking.php#1', $response->request->uri);
-                self::assertEquals(true,$response->request->hasEndCallback());
-            }))->sendJson()->expectsJson()->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2'=> 'addHeaders哈"'))->send();
+                self::assertEquals(true, $response->request->hasEndCallback());
+            }))->sendJson()->expectsJson()->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2' => 'addHeaders哈"'))->send();
 
         //test trace
         $responses[] = Request::create()->addQuery(array('sleepSecs' => 2))->trace(TEST_SERVER . '/dynamic/blocking.php', array(
@@ -113,14 +207,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         //test proxy ip
         $responses[] = Request::create()->get('http://test-proxy.local/dynamic/blocking.php', array(
-                'ip' => WEB_SERVER_HOST,
-                'port' => WEB_SERVER_PORT,
-                'timeout' => 2,
-                'callback' => function (Response $response) {
-                    self::assertFalse($response->hasErrors());
-                    self::assertTrue(strlen($response->body) > 0);
-                }
-            ))->send();
+            'ip' => WEB_SERVER_HOST,
+            'port' => WEB_SERVER_PORT,
+            'timeout' => 2,
+            'callback' => function (Response $response) {
+                self::assertFalse($response->hasErrors());
+                self::assertTrue(strlen($response->body) > 0);
+            }
+        ))->send();
 
         //test head
         $response = Request::create()->head(TEST_SERVER . '/dynamic/blocking.php?head', array(
