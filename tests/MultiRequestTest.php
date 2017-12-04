@@ -31,7 +31,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
         ))->addOptions(
             array(
                 array(
-                    'url' => TEST_SERVER . '/dynamic/blocking.php?&1',
+                    'url' => TEST_SERVER . '/dynamic/all_data.php?&a=1',
                     'method' => 'HEAD',
                     'data' => array(),
                     'callback' => function (Response $response) {
@@ -42,48 +42,47 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         self::assertTrue(is_array($response->header) && sizeof($response->header)>0);
                         self::assertLessThan(1.5, $response->duration);
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
-                        self::assertEquals(TEST_SERVER . '/dynamic/blocking.php?&1', $response->request->uri);
+                        self::assertEquals(TEST_SERVER . '/dynamic/all_data.php?&a=1', $response->request->uri);
                         self::assertEquals(Request::HEAD, $response->request->getIni('method'));
                         self::assertTrue($response->request->hasEndCallback());
                     }
                 ),
 
                 array(
-                    'url' => TEST_SERVER . '/dynamic/blocking.php?sleepSecs=1&a',
+                    'url' => TEST_SERVER . '/dynamic/all_data.php?&a&data=this_is_post_data',
                     'data' => array(
-                        'data' => 'this_is_post_data',
                     ),
+                    'expects_mime' => 'json',
                     'callback' => function (Response $response) {
                         //test json
-                        self::assertEquals(true, strlen($response->body)>0);
-                        self::assertJson($response->body);
+                        self::assertNotEmpty($response->body);
                         //test setDefaults
                         self::assertEquals(2, $response->request->getIni('timeout'));
 
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
                         self::assertEquals(Request::GET, $response->request->getIni('method'));
                         self::assertTrue($response->request->hasEndCallback());
-                        self::assertContains('this_is_post_data', $response->body);
+                        self::assertContains('this_is_post_data', $response->body['g']['data']);
                     }
                 ),
                 array(
-                    'url' => TEST_SERVER . '/dynamic/blocking.php?&b',
+                    'url' => TEST_SERVER . '/dynamic/all_data.php?&b',
                     'method' => 'POST',
+                    'expects_mime' => 'json',
                     'data' => array(
                         'data' => 'this_is_post_data',
                     ),
                     'callback' => function (Response $response) {
                         //test json
-                        self::assertEquals(true, strlen($response->body)>0);
-                        self::assertJson($response->body);
+                        self::assertNotEmpty($response->body);
                         //test setDefaults
                         self::assertEquals(2, $response->request->getIni('timeout'));
 
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
-                        self::assertEquals(TEST_SERVER . '/dynamic/blocking.php?&b', $response->request->uri);
+                        self::assertEquals(TEST_SERVER . '/dynamic/all_data.php?&b', $response->request->uri);
                         self::assertEquals(Request::POST, $response->request->getIni('method'));
                         self::assertTrue($response->request->hasEndCallback());
-                        self::assertContains('this_is_post_data', $response->body);
+                        self::assertContains('this_is_post_data', $response->body['p']['data']);
                     }
                 ),
                 array(
@@ -91,7 +90,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     'callback' => function (Response $response) {
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
                         self::assertEquals(TEST_SERVER . '/static/test.json', $response->request->uri);
-                        self::assertTrue(strlen($response->body) > 0);
+                        self::assertNotEmpty($response->body);
                         self::assertJsonStringEqualsJsonFile(WEB_SERVER_DOCROOT . '/static/test.json', $response->body);
                     }
                 ),
@@ -109,33 +108,33 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     },
                 ),
                 array(
-                    'url' => 'http://proxy.test/dynamic/blocking.php',
+                    'url' => 'http://proxy.test/dynamic/all_data.php',
                     'ip' => WEB_SERVER_HOST ,
                     'port' => WEB_SERVER_PORT,
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
                         self::assertFalse($response->hasErrors());
-                        self::assertTrue(strlen($response->body) > 0);
+                        self::assertNotEmpty($response->body);
                     }
                 ),
                 array(
-                    'url' => TEST_SERVER.'/dynamic/blocking.php',
-                    'expectsMime' => 'json',
-                    'sendMime' => 'json',
+                    'url' => TEST_SERVER.'/dynamic/all_data.php',
+                    'expects_mime' => 'json',
+                    'send_mime' => 'json',
                     'method' => 'POST',
-                    'data' => array('aaa'=>'bbc'),
+                    'data' => array('aaa'=>'bbc2'),
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
+                        var_dump($response->body);
                         self::assertFalse($response->hasErrors());
-                        self::assertEquals('{"aaa":"bbc"}', $response->request->getIni('data'));
-                        self::assertEquals('{"aaa":"bbc"}', $response->body['postRaw']);
+                        self::assertEquals(array('aaa'=>'bbc2'), $response->request->getIni('data'));
+                        self::assertEquals('{"aaa":"bbc2"}', $response->body['postRaw']);
+                        self::assertEquals(array('{"aaa":"bbc2"}' => ''), $response->body['p']);
                         self::assertTrue(is_array($response->body) && sizeof($response->body));
                     }
                 ),
                 array(
-                    'url' => TEST_SERVER.'/dynamic/blocking.php',
-//                    'expectsMime' => 'json',
-//                    'sendMime' => 'json',
+                    'url' => TEST_SERVER.'/dynamic/all_data.php',
                     'method' => 'POST',
                     'data' => array('aaa'=>'bbc'),
                     'timeout' => 0,//unlimited timeout
@@ -177,7 +176,5 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        echo 'enter ' . __CLASS__ . PHP_EOL;
     }
-
 }

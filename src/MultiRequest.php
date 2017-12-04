@@ -18,7 +18,7 @@ class MultiRequest
     /**
      * @var [Response]
      */
-    protected static $requestPool;
+    protected static $requestPool = array();
     protected static $multiHandler;
     protected $defaultOptions = array();
     private static $instance;
@@ -127,7 +127,8 @@ class MultiRequest
             curl_close($request->curlHandle);
         }
         curl_multi_close(self::$multiHandler);
-        self::$requestPool = null;
+        self::$requestPool = array();
+        self::$multiHandler = null;
         return $return;
     }
 

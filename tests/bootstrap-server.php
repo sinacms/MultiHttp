@@ -3,6 +3,7 @@ date_default_timezone_set('Asia/Shanghai');
 $php_version = phpversion();
 $php_major = floatval(substr($php_version, 0, 3));
 
+defined('WEB_SERVER_PORT') ? : define('WEB_SERVER_PORT', mt_rand(1024,2048));
 define('TEST_SERVER', 'http://'.WEB_SERVER_HOST . ':' . WEB_SERVER_PORT);
 
 // Define SIGKILL if pcntl is not found
