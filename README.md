@@ -10,6 +10,8 @@
 	Notice that libcurl version must be over 7.36.0, libcurl version must be over 7.36.0， otherwise timeout can not suppert decimal.
 
 
+![](multi-http.jpg)
+
 ## Contents
 
  * [Feature](#feature)
