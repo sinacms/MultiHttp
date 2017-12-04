@@ -15,7 +15,15 @@ use MultiHttp\Exception\InvalidArgumentException;
 
 class Request extends Http
 {
+<<<<<<< HEAD
     const MAX_REDIRECTS_DEFAULT = 10;
+=======
+    /**
+     * you can implement more traits
+     */
+    use JsonTrait;
+
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     protected static $curlAlias = array(
         'url' => 'CURLOPT_URL',
         'uri' => 'CURLOPT_URL',
@@ -35,11 +43,20 @@ class Request extends Http
         'transfer' => 'CURLOPT_RETURNTRANSFER', // TRUE:return string; FALSE:output directly (curl_exec)
         'follow_location' => 'CURLOPT_FOLLOWLOCATION',
         'timeout_ms' => 'CURLOPT_TIMEOUT_MS', // milliseconds,  libcurl version > 7.36.0 ,
+<<<<<<< HEAD
+=======
+        'expects_mime' => null, //expected mime
+        'send_mime' => null, //send mime
+        'ip' => null,//specify ip to send request
+        'callback' => null,//callback on end
+
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     );
     protected static $logger;
     public $curlHandle;
     public
         $uri,
+<<<<<<< HEAD
         $timeout,
         $maxRedirects,
         $followRedirects;
@@ -68,6 +85,46 @@ class Request extends Http
     protected $endCallback;
     protected $withURIQuery;
     protected $hasInitialized = false;
+=======
+        $sendMime,
+        $expectedMime,
+        $timeout,
+        $maxRedirects,
+        $encoding,
+        $payload,
+        $retryTimes,
+        /**
+         * @var int seconds
+         */
+        $retryDuration,
+        $followRedirects;
+
+    protected
+        $body,
+        $endCallback,
+        $withURIQuery,
+        $hasInitialized = false,
+        /**
+         * @var array
+         */
+        $options = array(
+            'CURLOPT_MAXREDIRS' => 10,
+            'CURLOPT_SSL_VERIFYPEER' => false,//for https
+            'CURLOPT_SSL_VERIFYHOST' => 0,//for https
+            'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//ipv4 first
+//            'CURLOPT_SAFE_UPLOAD' => false,// compatible with PHP 5.6.0
+            'header' => true,
+            'method' => self::GET,
+            'transfer' => true,
+            'headers' => array(),
+            'follow_location' => true,
+            'timeout' => 0,
+            //        'ip' => null, //host, in string, .e.g: 172.16.1.1:888
+            'retry_times' => 1,//redo task when failed
+            'retry_duration' => 0,//in seconds
+        );
+
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
 
     protected function __construct()
     {
@@ -82,6 +139,37 @@ class Request extends Http
     public static function setLogger($logger)
     {
         self::$logger = $logger;
+    }
+    /**
+     * Specify   timeout
+     * @param float|int $timeout seconds to timeout the HTTP call
+     * @return Request
+     */
+    public function timeout($timeout)
+    {
+        $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return Request
+     */
+    public function noFollow()
+    {
+        return $this->follow(0);
+    }
+
+    /**
+     * If the response is a 301 or 302 redirect, automatically
+     * send off another request to that location
+     * @param int $follow follow or not to follow or maximal number of redirects
+     * @return Request
+     */
+    public function follow($follow)
+    {
+        $this->maxRedirects = abs($follow);
+        $this->followRedirects = $follow > 0;
+        return $this;
     }
 
     /**
@@ -108,8 +196,13 @@ class Request extends Http
      */
     public function follow($follow)
     {
+<<<<<<< HEAD
         $this->maxRedirects = abs($follow);
         $this->followRedirects = $follow > 0;
+=======
+        $this->sendMime = $mime;
+//        $this->addHeader('Content-type', Mime::getFullMime($mime));
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
         return $this;
     }
 
@@ -129,6 +222,7 @@ class Request extends Http
         return $this;
     }
 
+<<<<<<< HEAD
     public function hasCert()
     {
         return isset($this->cert) && isset($this->key);
@@ -174,6 +268,9 @@ class Request extends Http
         $this->headers[$header_name] = $value;
         return $this;
     }
+=======
+
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
 
     public function addHeaders(array $headers)
     {
@@ -183,6 +280,27 @@ class Request extends Http
         return $this;
     }
     public function expectsType($mime)
+<<<<<<< HEAD
+=======
+    {
+        return $this->expects($mime);
+    }
+    public function sendType($mime)
+    {
+        return $this->contentType = $mime;
+    }
+    public function expects($mime)
+    {
+        if (empty($mime)) return $this;
+        $this->expected_type = Mime::getFullMime($mime);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function endCallback()
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     {
         return $this->expects($mime);
     }
@@ -221,20 +339,37 @@ class Request extends Http
         return $alias;
     }
 
+<<<<<<< HEAD
     public function addQuery($data)
+=======
+    /**
+     * @param $queryData
+     * @return $this
+     */
+    public function addQuery($queryData)
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     {
-        if (!empty($data)) {
-            if (is_array($data)) {
-                $this->withURIQuery = http_build_query($data);
-            } else if (is_string($data)) {
-                $this->withURIQuery = $data;
+        if (!empty($queryData)) {
+            if (is_array($queryData)) {
+                $this->withURIQuery = http_build_query($queryData);
+            } else if (is_string($queryData)) {
+                $this->withURIQuery = $queryData;
             } else {
                 throw new InvalidArgumentException('data must be array or string');
             }
         }
         return $this;
     }
+<<<<<<< HEAD
 
+=======
+    /**
+     * @param $uri
+     * @param null $payload
+     * @param array $options
+     * @return Request
+     */
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     public function post($uri, $payload = null, array $options = array())
     {
         return $this->ini(Http::POST, $uri, $payload, $options);
@@ -243,6 +378,24 @@ class Request extends Http
     /**
      * @param $uri
      * @param null $payload
+<<<<<<< HEAD
+=======
+     * @param array $options
+     * @param null $response
+     * @return string
+     */
+    public function quickPost($uri, $payload = null, array $options = array(), &$response = null)
+    {
+        $response = $this->post($uri, $payload, $options)->send();
+        return $response->body;
+    }
+
+
+    /**
+     * @param $method
+     * @param $url
+     * @param $data
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
      * @param array $options
      * @param null $response
      * @return string
@@ -282,6 +435,19 @@ class Request extends Http
     public function get($uri, array $options = array())
     {
         return $this->ini(Http::GET, $uri, array(), $options);
+    }
+
+
+    /**
+     * @param $uri
+     * @param array $options
+     * @param null $response
+     * @return string
+     */
+    public function quickGet($uri, array $options = array(), &$response = null)
+    {
+        $response = $this->get($uri, $options)->send();
+        return $response->body;
     }
 
     /**
@@ -347,11 +513,35 @@ class Request extends Http
         }
 
         if (isset($this->options['retry_times'])) {
+<<<<<<< HEAD
            $this->retryTimes = abs($this->options['retry_times']);
         }
 
         if (isset($this->options['retry_duration'])) {
            $this->retryDuration = abs($this->options['retry_duration']);
+=======
+            $this->retryTimes = abs($this->options['retry_times']);
+        }
+
+        if (isset($this->options['retry_duration'])) {
+            $this->retryDuration = abs($this->options['retry_duration']);
+        }
+
+        if(isset($this->options['expects_mime'])){
+            $this->expectsMime($this->options['expects_mime']);
+        }
+
+        if(isset($this->options['send_mime'])){
+            $this->sendMime($this->options['send_mime']);
+        }
+
+//        if(!empty($this->options['data']) && !Http::hasBody($this->options['method'])){
+//            $this->withURIQuery =  is_array($this->options['data']) ? http_build_query($this->options['data']) : $this->options['data'];
+//        }
+        if (isset($this->withURIQuery)) {
+            $this->options['url'] .= strpos($this->options['url'], '?') === FALSE ? '?' : '&';
+            $this->options['url'] .= $this->withURIQuery;
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
         }
 
         if (isset($this->options['data'])) {
@@ -363,7 +553,10 @@ class Request extends Http
         }
         if (isset($this->options['callback'])) {
             $this->onEnd($this->options['callback']);
+<<<<<<< HEAD
             unset($this->options['callback']);
+=======
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
         }
         //swap ip and host
         if (!empty($this->options['ip'])) {
@@ -376,7 +569,10 @@ class Request extends Http
                 $this->options['headers'][] = 'Host: ' . $host;
             }
             $this->options['url'] = preg_replace('/\/\/([^\/]+)/', '//' . $this->options['ip'], $this->options['url']);
+<<<<<<< HEAD
             unset($this->options['ip']);
+=======
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
             unset($host);
         }
         //process version
@@ -401,12 +597,37 @@ class Request extends Http
         }
 
         $cURLOptions = self::filterAndRaw($this->options);
+<<<<<<< HEAD
 
+=======
+        if(isset($this->body))$cURLOptions[CURLOPT_POSTFIELDS] = $this->body;//use serialized body not raw data
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
         curl_setopt_array($this->curlHandle, $cURLOptions);
 
         return $this;
     }
 
+<<<<<<< HEAD
+=======
+    public function serializeBody()
+    {
+        if (isset($this->options['data'])) {
+            if (isset($this->sendMime)) {
+                $method = $this->sendMime;
+                if (!method_exists($this, $method)) throw new InvalidOperationException($method . ' is not exists in ' . __CLASS__);
+                $this->body = $this->$method($this->options['data']);
+            } else {
+                $this->body =  $this->options['data'];
+            }
+
+        }
+    }
+
+    /**
+     * @param callable $callback
+     * @return $this
+     */
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     public function onEnd(callable $callback)
     {
         if (!is_callable($callback)) {
@@ -439,9 +660,12 @@ class Request extends Http
         Helper::retry($this->retryTimes, function()use(&$body, &$errno, $isMultiCurl, $handle){
             $body = $isMultiCurl ? curl_multi_getcontent($handle) : curl_exec($handle);
             $errno = curl_errno($handle);
+<<<<<<< HEAD
             var_dump(curl_error($handle), time());
             ob_flush();
             flush();
+=======
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
             return 0 == $errno;
         }, $this->retryDuration);
 

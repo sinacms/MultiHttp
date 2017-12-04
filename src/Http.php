@@ -47,4 +47,11 @@ abstract class Http {
 
 	abstract function trace($uri, array $options = array());
 
+    /**
+     * @param $method
+     * @return bool
+     */
+    public static function hasBody($method){
+        return in_array($method, array(self::POST, self::PUT, self::PATCH, self::OPTIONS));
+    }
 }

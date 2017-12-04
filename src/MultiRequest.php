@@ -15,6 +15,12 @@ use MultiHttp\Exception\InvalidArgumentException;
  */
 class MultiRequest
 {
+<<<<<<< HEAD
+=======
+    /**
+     * @var [Response]
+     */
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     protected static $requestPool = array();
     protected static $multiHandler;
     private static $instance;

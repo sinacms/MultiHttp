@@ -16,10 +16,63 @@ use MultiHttp\Response;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    public static function setupBeforeClass()
+    function testHTTPS()
     {
+        \MultiHttp\Request::create()->quickGet('https://github.com/',[
+                'callback' => function($response){
+                    $this->assertNotEmpty($response->body);
+                }
+        ]);
+    }
+    function testQuick()
+    {
+        $response = null;
+        $uniqId = uniqid();
+        \MultiHttp\Request::create()->quickGet(TEST_SERVER . '/dynamic/all_data.php' . '?aa=' . $uniqId, [
+            'callback' => function (\MultiHttp\Response $response) use ($uniqId) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+                $result = json_decode($response->body,1);
+                $this->assertEquals($uniqId, $result['g']['aa'], "assert error \n");
+            }
+        ], $response);
+        $uniqId = uniqid();
+        \MultiHttp\Request::create()->quickPost(TEST_SERVER . '/dynamic/all_data.php?aa=AA',
+            [
+                'bb' => $uniqId
+            ]
+            , [
+                'callback' => function (\MultiHttp\Response $response) use ($uniqId) {
+                    $this->assertInstanceOf('MultiHttp\Response', $response);
+                    $result = json_decode($response->body,1);
+                    $this->assertEquals('AA', $result['g']['aa'], "assert error \n");
+                    $this->assertEquals($uniqId, $result['p']['bb'], "assert error \n");
+                }
+            ], $response);
+        $this->assertInstanceOf('MultiHttp\Response', $response);
+
+        \MultiHttp\Request::create()->quickGet('http://google.com', [
+            'timeout' => 1,
+            'retry_times' => 3,
+            'retry_duration' => 1,
+            'callback' => function ($response) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+            }
+        ], $response);
+        $this->assertInstanceOf('MultiHttp\Response', $response);
+
+        echo "\n\n\n";
+        \MultiHttp\Request::create()->quickPost('http://facebook.com', [], [
+            'timeout' => 3,
+            'retry_times' => 2,
+            'retry_duration' => 1,
+            'callback' => function ($response) {
+                $this->assertInstanceOf('MultiHttp\Response', $response);
+            }
+        ], $response);
+        $this->assertInstanceOf('MultiHttp\Response', $response);
     }
 
+<<<<<<< HEAD
     function testQuick()
     {
         $response = null;
@@ -70,6 +123,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ], $response);
     }
 
+=======
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     function testLazy()
     {
         $mr = \MultiHttp\MultiRequest::create();
@@ -90,8 +145,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             }
         ));
         //add ...
+<<<<<<< HEAD
 //        $mr->execute();
         $results = $mr->execute();
+=======
+//        $mr->sendAll();
+        $results = $mr->sendAll();
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
         echo 'size of results : '. sizeof($results)."\n";
     }
 
@@ -114,6 +174,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         echo 'retry times: ' . $trys . "\n";
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
     function test()
     {
         $start = microtime(1);
@@ -130,7 +194,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ))->addQuery('e=f')->send();
 
         //test timeout/http get
-        $responses[] = Request::create()->addQuery('sleepSecs=2')->get(TEST_SERVER . '/dynamic/blocking.php', array(
+        $responses[] = Request::create()->addQuery('sleep=2')->get(TEST_SERVER . '/dynamic/all_data.php', array(
             'timeout' => 3,
             'timeout_ms' => 2000,
             'callback' => function (Response $response) {
@@ -138,30 +202,42 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 self::assertGreaterThan(1, $response->duration);
                 self::assertTrue($response->hasErrors(), $response->error);
                 self::assertTrue(!$response->body);
+<<<<<<< HEAD
                 self::assertEquals(TEST_SERVER . '/dynamic/blocking.php', $response->request->uri);
                 self::assertEquals(true, $response->request->hasEndCallback());
+=======
+                self::assertEquals(TEST_SERVER . '/dynamic/all_data.php', $response->request->uri);
+                self::assertEquals(true,$response->request->hasEndCallback());
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
             }))->send();
         //test expectsJson/headers
-        $responses[] = Request::create()->addQuery('sleepSecs=2')->get(TEST_SERVER . '/dynamic/blocking.php#1', array(
+        $responses[] = Request::create()->addQuery('sleep=2')->get(TEST_SERVER . '/dynamic/all_data.php#1', array(
             'timeout' => 3,
             'callback' => function (Response $response) {
                 self::assertLessThan(3, $response->duration);
                 self::assertGreaterThan(2, $response->duration);
                 self::assertTrue(!$response->hasErrors(), $response->error);
                 self::assertTrue(is_array($response->body));
+<<<<<<< HEAD
                 self::assertTrue(sizeof($response->body) > 0);
                 self::assertEquals(TEST_SERVER . '/dynamic/blocking.php#1', $response->request->uri);
                 self::assertEquals(true, $response->request->hasEndCallback());
             }))->sendJson()->expectsJson()->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2' => 'addHeaders哈"'))->send();
+=======
+                self::assertTrue(sizeof($response->body)>0);
+                self::assertEquals(TEST_SERVER . '/dynamic/all_data.php#1', $response->request->uri);
+                self::assertEquals(true,$response->request->hasEndCallback());
+            }))->sendJson()->expectsJson()->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2'=> 'addHeaders哈"'))->send();
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
 
         //test trace
-        $responses[] = Request::create()->addQuery(array('sleepSecs' => 2))->trace(TEST_SERVER . '/dynamic/blocking.php', array(
+        $responses[] = Request::create()->addQuery(array('sleep' => 2))->trace(TEST_SERVER . '/dynamic/all_data.php', array(
             'timeout' => 3,
             'callback' => function (Response $response) {
                 self::assertTrue(strlen($response->body) > 0);
                 self::assertFalse($response->hasErrors());
                 self::assertJson($response->body);
-                self::assertEquals(TEST_SERVER . '/dynamic/blocking.php', $response->request->uri);
+                self::assertEquals(TEST_SERVER . '/dynamic/all_data.php', $response->request->uri);
                 self::assertEquals(3, $response->request->getIni('timeout'));
             }))->send();
         //test put
@@ -173,21 +249,21 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         })->send();
 
         //test patch/addOptions
-        $responses[] = Request::create()->get(TEST_SERVER . '/dynamic/blocking.php', array(
+        $responses[] = Request::create()->get(TEST_SERVER . '/dynamic/all_data.php', array(
             'callback' => function (Response $response) {
                 self::assertEquals(Request::PATCH, $response->request->getIni('method'));
                 self::assertTrue($response->request->hasEndCallback());
             }))->addOptions(array(
             'method' => Request::PATCH
         ))->send();
-        $responses[] = Request::create()->patch(TEST_SERVER . '/dynamic/blocking.php', array(
+        $responses[] = Request::create()->patch(TEST_SERVER . '/dynamic/all_data.php', array(
             'callback' => function (Response $response) {
                 self::assertEquals(Request::PATCH, $response->request->getIni('method'));
                 self::assertTrue($response->request->hasEndCallback());
             }))->send();
 
         //test post
-        $responses[] = Request::create()->post(TEST_SERVER . '/dynamic/blocking.php', array('data' => 'this_is_post_data'), array(
+        $responses[] = Request::create()->post(TEST_SERVER . '/dynamic/all_data.php', array('data' => 'this_is_post_data'), array(
             'callback' => function (Response $response) {
                 self::assertEquals(Request::POST, $response->request->getIni('method'));
                 self::assertTrue($response->request->hasEndCallback());
@@ -196,7 +272,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             }))->send();
 
         //test delete
-        $responses[] = Request::create()->delete(TEST_SERVER . '/dynamic/blocking.php', array(), array(
+        $responses[] = Request::create()->delete(TEST_SERVER . '/dynamic/all_data.php', array(), array(
             //            'data' => 'data=this_is_post_data', //not work
             'callback' => function (Response $response) {
                 self::assertEquals(Request::DELETE, $response->request->getIni('method'));
@@ -206,6 +282,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             }))->send();
 
         //test proxy ip
+<<<<<<< HEAD
         $responses[] = Request::create()->get('http://test-proxy.local/dynamic/blocking.php', array(
             'ip' => WEB_SERVER_HOST,
             'port' => WEB_SERVER_PORT,
@@ -215,9 +292,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 self::assertTrue(strlen($response->body) > 0);
             }
         ))->send();
+=======
+        $responses[] = Request::create()->get('http://test-proxy.local/dynamic/all_data.php', array(
+                'ip' => WEB_SERVER_HOST,
+                'port' => WEB_SERVER_PORT,
+                'timeout' => 2,
+                'callback' => function (Response $response) {
+                    self::assertFalse($response->hasErrors());
+                    self::assertTrue(strlen($response->body) > 0);
+                }
+            ))->send();
+>>>>>>> 1799bc479182f58431deae9f8975bf80f1e7cee6
 
         //test head
-        $response = Request::create()->head(TEST_SERVER . '/dynamic/blocking.php?head', array(
+        $response = Request::create()->head(TEST_SERVER . '/dynamic/all_data.php?head', array(
             'callback' => function (Response $response) {
                 self::assertEmpty($response->body);
             }
@@ -234,7 +322,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         echo 'total takes:', $end - $start, ' secs;';
 
     }
-
+    function testUpload(){
+        $result = \MultiHttp\Request::create()->quickPost(TEST_SERVER . '/dynamic/all_data.php', [
+            'field_a' => 'post_data',
+            'file_a' => "@".__DIR__."/static/test_image.jpg",
+        ]);
+        $result = json_decode($result, 1);
+        $this->assertEquals('post_data', $result['p']['field_a']);
+        $this->assertNotEmpty($result['f']['file_a']['size']);
+    }
     protected function setUp()
     {
         parent::setUp();
