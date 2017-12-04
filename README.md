@@ -52,12 +52,11 @@ use MultiHttp\Response;
 
 //method 1
 Request::create()->get('http://qq.com', array(
+          'timeout' => 3,
           'callback' => function (Response $response) {
               echo $response->body;
-          }))->addOptions(array(
-          'method' => Request::PATCH,
-          'timeout' => 3,
-      ))->send();
+          },
+          ))->send();
       
 //method 2
 $result = Request::create()->post(
