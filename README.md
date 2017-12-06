@@ -58,8 +58,10 @@ use MultiHttp\Request;
 use MultiHttp\Response;
 
 //method 1
-Request::create()->get('http://qq.com', array(
+Request::create()->get('http://sina.com.cn', array(
           'timeout' => 3,
+	  'expects_mime'=>'json',
+	  'retry_times' => 3,
           'callback' => function (Response $response) {
               echo $response->body;
           },
