@@ -62,6 +62,7 @@ Request::create()->get('http://sina.com.cn', array(
           'timeout' => 3,
 	  'expects_mime'=>'json',
 	  'retry_times' => 3,
+	  'ip' => '127.0.0.1:8080',//alias for proxy, better than raw proxy
           'callback' => function (Response $response) {
               echo $response->body;
           },
