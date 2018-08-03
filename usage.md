@@ -68,7 +68,6 @@
 | public static | <strong>create()</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>delete(</strong><em>mixed</em> <strong>$uri</strong>, <em>array</em> <strong>$options=array()</strong>)</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>endCallback()</strong> : <em>mixed</em> |
-| public | <strong>expectsJson()</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>expectsMime(</strong><em>string</em> <strong>$mime=`'json'`</strong>)</strong> : <em>\MultiHttp\$this</em> |
 | public | <strong>get(</strong><em>mixed</em> <strong>$uri</strong>, <em>array</em> <strong>$options=array()</strong>)</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>getIni(</strong><em>mixed</em> <strong>$field=null</strong>)</strong> : <em>bool/mixed</em> |
@@ -82,7 +81,6 @@
 | public | <strong>post(</strong><em>mixed</em> <strong>$uri</strong>, <em>null</em> <strong>$payload=null</strong>, <em>array</em> <strong>$options=array()</strong>)</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>put(</strong><em>mixed</em> <strong>$uri</strong>, <em>null</em> <strong>$payload=null</strong>, <em>array</em> <strong>$options=array()</strong>)</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>send(</strong><em>bool</em> <strong>$isMultiCurl=false</strong>)</strong> : <em>[\MultiHttp\Response](#class-multihttpresponse)</em> |
-| public | <strong>sendJson()</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>sendMime(</strong><em>string</em> <strong>$mime=`'json'`</strong>)</strong> : <em>[\MultiHttp\Request](#class-multihttprequest)</em> |
 | public | <strong>serializeBody()</strong> : <em>void</em> |
 | public static | <strong>setLogHandler(</strong><em>\callable</em> <strong>$handler</strong>)</strong> : <em>void</em> |

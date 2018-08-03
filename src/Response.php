@@ -14,6 +14,7 @@ namespace MultiHttp;
 
 use MultiHttp\Exception\InvalidOperationException;
 use MultiHttp\Exception\UnexpectedResponseException;
+use MultiHttp\Handler\Json;
 
 /**
  * Class Response
@@ -95,11 +96,12 @@ class Response
     }
     public function unserializeBody()
     {
-        if (isset($this->request->expectedMime)) {
-            if (Mime::getFullMime($this->request->expectedMime) !== $this->contentType) throw new UnexpectedResponseException('expected mime can not be matched, real mime:'. $this->contentType. ', expected mime:'. Mime::getFullMime($this->request->expectedMime));
-            $method = 'un'.ucfirst($this->request->expectedMime);
-            if (!method_exists($this->request, $method)) throw new InvalidOperationException($method . ' is not exists in ' . __CLASS__);
-            $this->body = $this->request->{$method}($this->body);
+        if (isset($this->request->expectsMime)) {
+            if (Mime::getFullMime($this->request->expectsMime) !== $this->contentType) throw new UnexpectedResponseException('expected mime can not be matched, real mime:'. $this->contentType. ', expected mime:'. Mime::getFullMime($this->request->expectsMime));
+            $clz = "\MultiHttp\\Handler\\".ucfirst($this->request->expectsMime);
+            $inst = new $clz;
+            if (!($inst instanceof Handler\IHandler)) throw new InvalidOperationException($clz . ' is not implement of  IHandler');
+            $this->body = $inst->decode($this->body);
         }
     }
     /**

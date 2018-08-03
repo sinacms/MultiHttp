@@ -22,7 +22,7 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
     {
     }
 
-    function test()
+    function testMulti()
     {
         $start = microtime(1);
         $mc = MultiRequest::create();
@@ -58,11 +58,10 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                         self::assertNotEmpty($response->body);
                         //test setDefaults
                         self::assertEquals(2, $response->request->getIni('timeout'));
-
                         self::assertFalse($response->hasErrors(), $response->request->uri . $response->error);
                         self::assertEquals(Request::GET, $response->request->getIni('method'));
                         self::assertTrue($response->request->hasEndCallback());
-                        self::assertContains('this_is_post_data', $response->body['g']['data']);
+                        self::assertContains('this_is_post_data', $response->body['g'] );
                     }
                 ),
                 array(
@@ -125,11 +124,10 @@ class MultiRequestTest extends \PHPUnit_Framework_TestCase
                     'data' => array('aaa'=>'bbc2'),
                     'timeout' => 0,//unlimited timeout
                     'callback' => function (Response $response) {
-                        var_dump($response->body);
                         self::assertFalse($response->hasErrors());
                         self::assertEquals(array('aaa'=>'bbc2'), $response->request->getIni('data'));
                         self::assertEquals('{"aaa":"bbc2"}', $response->body['postRaw']);
-                        self::assertEquals(array('{"aaa":"bbc2"}' => ''), $response->body['p']);
+                        self::assertEquals(array(), $response->body['p']);
                         self::assertTrue(is_array($response->body) && sizeof($response->body));
                     }
                 ),

@@ -16,6 +16,10 @@ use MultiHttp\Response;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+    }
     function testHTTPS()
     {
         \MultiHttp\Request::create()->quickGet('https://github.com/',[
@@ -83,7 +87,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 //do sth with response
             }
         ));
-        $mr->add('POST', 'http://baidu.cn', array(), array(
+        $mr->add('POST', TEST_SERVER.'/dynamic/all_data.php?sleep=1', array(), array(
             'timeout' => 3,
             'callback'=> function($response){
                 $this->assertInstanceOf('MultiHttp\Response', $response);
@@ -155,7 +159,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 self::assertTrue(sizeof($response->body)>0);
                 self::assertEquals(TEST_SERVER . '/dynamic/all_data.php#1', $response->request->uri);
                 self::assertEquals(true,$response->request->hasEndCallback());
-            }))->sendJson()->expectsJson()->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2'=> 'addHeaders哈"'))->send();
+            }))->sendMime('json')->expectsMime('json')->addHeader('Debug', 'addHeader')->addHeaders(array('Debug2'=> 'addHeaders哈"'))->send();
 
         //test trace
         $responses[] = Request::create()->addQuery(array('sleep' => 2))->trace(TEST_SERVER . '/dynamic/all_data.php', array(
@@ -237,17 +241,24 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         echo 'total takes:', $end - $start, ' secs;';
 
     }
-    function testUpload(){
+    function testForm(){
         $result = \MultiHttp\Request::create()->quickPost(TEST_SERVER . '/dynamic/all_data.php', [
             'field_a' => 'post_data',
             'file_a' => "@".__DIR__."/static/test_image.jpg",
         ]);
         $result = json_decode($result, 1);
         $this->assertEquals('post_data', $result['p']['field_a']);
+        $this->assertNotEmpty($result['p']['file_a']);
+    }
+    function testUpload(){
+        $result = \MultiHttp\Request::create()->upload(TEST_SERVER . '/dynamic/all_data.php', [
+            'field_a' => 'post_data',
+            'file_a' => "@".__DIR__."/static/test_image.jpg",
+//            'file_a' => new \CURLFile(__DIR__."/static/test_image.jpg"),
+        ])->send();
+        $result = json_decode($result->body, 1);
+        $this->assertEquals('post_data', $result['p']['field_a']);
         $this->assertNotEmpty($result['f']['file_a']['size']);
     }
-    protected function setUp()
-    {
-        parent::setUp();
-    }
+
 }

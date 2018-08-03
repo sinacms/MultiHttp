@@ -13,6 +13,8 @@ namespace MultiHttp;
 
 use MultiHttp\Exception\InvalidArgumentException;
 use MultiHttp\Exception\InvalidOperationException;
+use MultiHttp\Handler\Form;
+use MultiHttp\Handler\IHandler;
 
 /**
  * Class Request
@@ -23,8 +25,6 @@ class Request extends Http
     /**
      * you can implement more traits
      */
-    use JsonTrait;
-
     protected static $curlAlias = array(
         'url' => 'CURLOPT_URL',
         'uri' => 'CURLOPT_URL',
@@ -55,7 +55,7 @@ class Request extends Http
         $curlHandle,
         $uri,
         $sendMime,
-        $expectedMime,
+        $expectsMime,
         $timeout,
         $maxRedirects,
         $encoding,
@@ -80,7 +80,8 @@ class Request extends Http
             'CURLOPT_SSL_VERIFYPEER' => false,//for https
             'CURLOPT_SSL_VERIFYHOST' => 0,//for https
             'CURLOPT_IPRESOLVE' => CURL_IPRESOLVE_V4,//ipv4 first
-//            'CURLOPT_SAFE_UPLOAD' => false,// compatible with PHP 5.6.0
+            'CURLOPT_SAFE_UPLOAD' => false,// compatible with PHP 5.6.0
+            'CURLOPT_USERAGENT' => 'Mozilla/5.0 (compatible;)',
             'header' => true,
             'method' => self::GET,
             'transfer' => true,
@@ -90,6 +91,7 @@ class Request extends Http
             //        'ip' => null, //host, in string, .e.g: 172.16.1.1:888
             'retry_times' => 1,//redo task when failed
             'retry_duration' => 0,//in seconds
+            'send_mime' => 'form',//in seconds
         );
 
 
@@ -171,7 +173,8 @@ class Request extends Http
      */
     public function expectsMime($mime = 'json')
     {
-        $this->expectedMime = $mime;
+        $this->expectsMime = $mime;
+        $this->options['expects_mime'] = $mime;
         return $this;
     }
 
@@ -182,6 +185,7 @@ class Request extends Http
     public function sendMime($mime = 'json')
     {
         $this->sendMime = $mime;
+        $this->options['send_mime'] = $mime;
 //        $this->addHeader('Content-type', Mime::getFullMime($mime));
         return $this;
     }
@@ -220,21 +224,6 @@ class Request extends Http
         }
         return $this;
     }
-    public function expectsType($mime)
-    {
-        return $this->expects($mime);
-    }
-    public function sendType($mime)
-    {
-        return $this->contentType = $mime;
-    }
-    public function expects($mime)
-    {
-        if (empty($mime)) return $this;
-        $this->expected_type = Mime::getFullMime($mime);
-        return $this;
-    }
-
     /**
      * @return mixed
      */
@@ -303,6 +292,17 @@ class Request extends Http
     public function post($uri, $payload = null, array $options = array())
     {
         return $this->ini(Http::POST, $uri, $payload, $options);
+    }
+
+    /**
+     * @param $uri
+     * @param null $payload
+     * @param array $options
+     * @return Request
+     */
+    public function upload($uri, $payload = null, array $options = array())
+    {
+        return $this->ini(Http::POST, $uri, $payload, $options)->sendMime('upload');
     }
 
     /**
@@ -488,11 +488,11 @@ class Request extends Http
         }
 
         if(isset($this->options['expects_mime'])){
-            $this->expectsMime($this->options['expects_mime']);
+            $this->expectsMime = $this->options['expects_mime'];
         }
 
         if(isset($this->options['send_mime'])){
-            $this->sendMime($this->options['send_mime']);
+            $this->sendMime = $this->options['send_mime'];
         }
 
 //        if(!empty($this->options['data']) && !Http::hasBody($this->options['method'])){
@@ -561,15 +561,13 @@ class Request extends Http
 
     public function serializeBody()
     {
+        //Passing an array to CURLOPT_POSTFIELDS will encode the data as multipart/form-data, while passing a URL-encoded string will encode the data as application/x-www-form-urlencoded.
         if (isset($this->options['data'])) {
-            if (isset($this->sendMime)) {
-                $method = $this->sendMime;
-                if (!method_exists($this, $method)) throw new InvalidOperationException($method . ' is not exists in ' . __CLASS__);
-                $this->body = $this->$method($this->options['data']);
-            } else {
-                $this->body =  is_array($this->options['data']) ? http_build_query($this->options['data']) : $this->options['data'];
-            }
-
+            $this->options[CURLOPT_POST] = true;
+            $clz = '\\MultiHttp\\Handler\\'.ucfirst($this->sendMime);
+            $inst = new $clz;
+            if (!($inst instanceof Handler\IHandler)) throw new InvalidOperationException($clz . ' is not implement of  IHandler');
+            $this->body = $inst->encode($this->options['data']);
         }
     }
 

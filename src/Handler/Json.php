@@ -9,37 +9,20 @@
  * @copyright Sina Corp.
  */
 
-namespace MultiHttp;
+namespace MultiHttp\Handler;
 
 use MultiHttp\Exception\UnexpectedResponseException;
 
 /**
- * Trait JsonTrait
  * @package MultiHttp
  */
-trait JsonTrait
+class Json implements IHandler
 {
-    /**
-     * @return Request
-     */
-    public function expectsJson()
-    {
-        return $this->expectsMime('json');
-    }
-
-    /**
-     * @return Request
-     */
-    public function sendJson()
-    {
-        return $this->sendMime('json');
-    }
-
     /**
      * @param $body
      * @return string
      */
-    public function json($body)
+    public function encode($body)
     {
         return json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
@@ -48,7 +31,7 @@ trait JsonTrait
      * @param $body
      * @return mixed
      */
-    public function unJson($body)
+    public function decode($body)
     {
         $parsed = json_decode($body, true);
         if(json_last_error() !== JSON_ERROR_NONE)throw new UnexpectedResponseException('parsing json occurs error: '.  self::jsonLastErrorMsg() . ', raw body: ' .$body  );
