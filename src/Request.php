@@ -528,7 +528,7 @@ class Request extends Http
             } else {
                 $this->options['headers'][] = 'Host: ' . $host;
             }
-            $this->options['url'] = preg_replace('/\/\/([^\/]+)/', '//' . $this->options['ip'], $this->options['url']);
+            $this->options['url'] = str_replace("//{$host}", '//' . $this->options['ip'], $this->options['url']);
             unset($host);
         }
         //process version
@@ -567,7 +567,7 @@ class Request extends Http
                 if (!method_exists($this, $method)) throw new InvalidOperationException($method . ' is not exists in ' . __CLASS__);
                 $this->body = $this->$method($this->options['data']);
             } else {
-                $this->body =  $this->options['data'];
+                $this->body =  is_array($this->options['data']) ? http_build_query($this->options['data']) : $this->options['data'];
             }
 
         }
