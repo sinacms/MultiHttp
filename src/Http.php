@@ -99,7 +99,7 @@ abstract class Http
      * @param $method
      * @return bool
      */
-    public static function hasBody($method){
+    public static function needBody($method){
         return in_array($method, array(self::POST, self::PUT, self::PATCH, self::OPTIONS));
     }
 }
