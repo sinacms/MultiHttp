@@ -2,10 +2,7 @@
 
 namespace MultiCurlTest;
 
-use MultiHttp\Http;
 use MultiHttp\Mime;
-use MultiHttp\Request;
-use MultiHttp\Response;
 
 
 class MimeTest extends \PHPUnit_Framework_TestCase
